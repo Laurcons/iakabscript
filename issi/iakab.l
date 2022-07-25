@@ -15,6 +15,8 @@
 
 %%
 
+\<3.*\n { /* comment */ }
+
 [\n\.] { return PERIOD; }
 <<EOF>> { return END; }
 [ \t]+ { /* ignore spaces and tabs */ }

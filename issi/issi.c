@@ -15,7 +15,7 @@ void symtableDeclareVar(char* identifier) {
     // try find variable
     for (int i = 0; i < symtable->len; i++) {
         symbol sym = symtable->stuff[i];
-        if (strcmp(sym->identifier, identifier))
+        if (strcmp(sym->identifier, identifier) == 0)
             stopHard("Variable already declared");
     }
     // add a new one
