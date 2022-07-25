@@ -2,6 +2,9 @@
 
 This is the official language specification for IakabScript (IS).
 
+## Version
+This spec is still a draft, and a work in progress. This spec will get version number v1.0 once the official interpreter is out. Until then, feel free to contribute with any suggestions or code examples.
+
 ## Profanity warning
 Please note that, while the language itself doesn't use profanity in its syntax, profanity is highly recommended when working with IS. The code examples here make extensive use of profanity.
 
@@ -9,13 +12,11 @@ Please note that, while the language itself doesn't use profanity in its syntax,
 
 All statements in IS are sentences. Ed never touches the Shift key, and instead either talks in all lowercase, or in all uppercase if shouting. Therefore, all sentences in IS are case-insensitive. This being said, it's your responsibility to make the source code's casing interesting.
 
-Additionally, you can only have one sentence per line, and a line per sentence. Optionally, you can fit multiple sentences on one line, by separating them with a DOT (`.`). The last sentence must not be ended with a DOT. Empty lines are ignored.
+A sentence is always followed by a DOT `.` or a NEWLINE `<NL>`. This means that sentences **cannot** be split on multiple lines.
 
 ```
-Nu deci ggggggggg. fix pula
-NU SE POATE
-
-DUTE COIE
+Nu deci ilie ii gggggggg
+Hoho dutedracu cu ilie oho. Hoho zic "duten pula" hoh
 ```
 
 ## Number literals
@@ -31,6 +32,8 @@ The only way to represent a real number is using `eez` notation. This represents
 
 The types of real and integer numbers are not differentiated in IS. They fall under the same "number" type.
 
+Compose more complex numbers by using operators such as `ori` or `plus`.
+
 ## String literals
 Although it might come as a surprise, Ed does actually use double quotes in messages. Therefore, IS supports it.
 
@@ -43,11 +46,20 @@ In cases when a variable doesn't have a value, the state is represented with the
 nu deci pula ii nui
 ```
 
+## Arrays
+TODO: define a method for how arrays would work.
+
+They would accept strings as indexes and _any_ object as values so they could realistically simulate objects, which would be really powerful.
+
+Mutating them would be done using either standard custom operators, or some utility functions defined in the SL.
+
 ## Booleans
 There are no booleans in IS. When evaluating a value as a condition, only a number value of zero is considered false. Everything else (including all strings) are true.
 
 ## Identifiers
 Identifiers are sequences of characters that identify things in your program, such as function names or variables. You can use any character from A to Z in your identifiers. Please note that identifiers are case-insensitive, as Ed wouldn't care about that. Additionally, you can form an identifier by chaining a bunch of "Smiling face with 3 hearts" emojis. You cannot combine these two methods.
+
+**NOTE:** The interpreter you use determines whether it accepts Unicode source code or not. If not, the emoji notation is not possible.
 
 You cannot have an identifier that starts with `e`, `g`, `n` or `b`.
 
@@ -69,28 +81,28 @@ Nu deci ilie ii nbbnbn <3 dal drecu
 <3 ce pula mea se intampla aici
 ```
 
-## Variable declarations
+## Variable declarations (scalars)
 Before you can use any variable, you must declare it inside its scope, and before it is used. I'm sure Ed doesn't like declaring his variables in advance, but sometimes he has to make compromises.
 
 Variables in IS don't have types: they are dynamic, and can hold any number or string type.
 
-Declare a variable using `nu deci [identifier] ii fix [value]`.
+Declare a variable using `nu deci [identifier] ii [value]`.
 
 ```
 nu deci ilie ii gggggggggggg
-nu deci bubu ii fix nbnbnbbbnbnnnnbb
+nu deci bubu ii nbnbnbbbnbnnnnbb
 ```
 
 You can write multiple declarations on a line by separating them with `si`. This is not recommended, as lines can get long, but when has this stopped Ed?
 
 ```
-nu deci ilie ii gggggggg si bubu ii fix nbnb. nu deci iacobu ii nbbbbbb
+nu deci ilie ii gggggggg si bubu ii nbnb. nu deci iacobu ii nbbbbbb
 ```
 
 ## Functions
 Functions can only be declared in the global scope, using the `hoho` keyword. They follow this general structure:
 ```
-nu hoho deci [function_name] ia [parameters] si face
+nu hoho deci [function_name] ia [parameters] si fa
 <3 function code here
 gata
 ```
@@ -99,43 +111,45 @@ gata
 
 ```
 <3 valid syntax
-nu hoho deci cplm ia nimic si face
+nu hoho deci cplm ia nimic si fa
     <3 your function code
 gata
 
 <3 or
-nu hoho deci uatafac ia pula cu pizda cu dracu si face
+nu hoho deci uatafac ia pula cu pizda cu dracu si fa
     <33333333
 gata
 ```
 
 To return, optionally with a value, use the keyword `iesi`.
 ```
-nu hoho deci pa ia nimic si face
+nu hoho deci pa ia nimic si fa
     iesi nbb
 gata
 ```
 
-Newlines after `face` are allowed.
+A NL or DOT after `fa` is required.
 
 ## Function calls
-Call a function by writing `hoho`, its identifier and the list of actual parameters, separated by `cu`. The first parameter is prepended with a `cu`. If there are no parameters, don't write any.
+Call a function using the following syntax:
+* With parameters: `hoho [functionName] [params] hoh`
+* Without parameters: `hohoh [functionName]`
+
+Separate parameters using the `cu` keyword.
 
 ```
-hoho uatafac cu pula
+hoho uatafac pula cu pizda oho
 
-hoho cplm
+hohoh cplm
 ```
 
 Function calls are expressions, and can be assigned to variables and such.
-
-You cannot pass a function call as a parameter. Assign it to a variable first.
 
 ## Control structures
 Control structures follow usual Romanian pseudocode-like expressions.
 ```
 <3 if structure
-daca [expression] atunci
+daca [expression] atunci fa
     <3333
 altfel
     <33333
@@ -148,7 +162,7 @@ cat timp [expression] fa
 gata
 ```
 
-Newlines after `atunci` and `fa` are allowed.
+A DOT or NL must always follow the `fa` keyword.
 
 There are no other control structures in IS. Ed doesn't need any more.
 
@@ -159,28 +173,38 @@ To read from the console, use the built-in function `zi`. It will read a string 
 
 ```
 nu deci pula ii gg si pizda ii nbnb
-hoho zic "dute dracu" cu pula cu pizda
+hoho zic "dute dracu" cu pula cu pizda oho
 ```
 ```
-nu deci coie ii hoho zi
-hoho zic cu coie
+nu deci coie ii hohoh zi
+hoho zic coie hoh
 ```
 
-## Arithmetic operators
-The following table defines the available arithmetic operators and their keywords.
+## Operators
+The following table lists all IS operators, in order of precedence (topmost have least priority). Equal priority operators are evaluated LTR. An `X` marks where the operands would be placed.
 
-Name | Math | Priority | IS keyword
------|------|----------|-----------
-addition | `+` | 1 | `plus`
-subtraction | `-` | 1 | `minus`
-multiplication | `*` | 2 | `ori`
-division | `/` | 2 | `impartitla`
-modulo | `%` | 2 | `modulo`
-exponentiation | `^` | 3 | `ridicatla`
+Keyword | Category | Name | Priority | Observations
+--------|----------|------|----------|-------------
+X `egal` X | equality | equal | 1
+X `inegal` X | equality | not equal | 1
+`invers` X | boolean | logical negation | 2
+X `sau` X | boolean | logical OR | 2
+X `deodatacu` X | boolean | logical AND | 2 | `si` is already a reserved keyword
+X `maimare` X | comparison | more than | 3
+X `maimic` X | comparison | less than | 3
+X `plus` X | arithmetic | addition | 4
+X `minus` X | arithmetic | subtraction | 4
+`minus` X | arithmetic | negation | 4
+X `ori` X | arithmetic | multiplication | 4
+X `impartit la` X | arithmetic | division | 4
+X `modulo` X | arithmetic | modulo | 4
 
-There are no parantheses in IS. If they were, Ed wouldn't use them. To simulate priority, just use a sequence of variable assignments.
+There are no parantheses in IS. If they were, Ed wouldn't use them. To simulate overriding priority, just use a sequence of variable assignments.
 
-Additionally, the `plus` operator can be used with two strings instead of numbers, to join them.
+* Comparison and equality operators work with strings by comparing lexicographically.
+* The PLUS operator works with strings by returning a concatenated string.
+
+TODO: extend functionality with arrays?
 
 ## Assignment
 Assign an expression to a variable using the `ii` keyword.
@@ -188,8 +212,8 @@ Assign an expression to a variable using the `ii` keyword.
 nu deci pula ii nui
 pula ii nb
 pula ii "pa"
-pula ii hoho functie cu pula
-hoho zic cu pula
+pula ii hoho functie pula hoh
+hoho zic pula hoh
 ```
 
 ## Including other files
@@ -201,17 +225,17 @@ The strings need NOT be surrounded by double quotes. The whole rest of the sente
 
 The strings can only have letters and spaces.
 
-Do not use "piton" as a string. It is reserved for future use.
+Do not use the word "piton" in any inclusion. It is a reserved keyword.
 
 All included files must have their names in uppercase (on case-sensitive systems like Linux). When including, they can be in any case.
 
 ```
-avem o pula <3 will look for "PULA.is"
+avem o pula <3 will look for "O_PULA.is"
 avem dute ba in pizda <3 will look for "DUTE_BA_IN_PIZDA.is"
 ```
 
 ## Standard library
-IS provides some utility functions.
+IS provides some utility functions. Additionally, any interpreter might provide its own Standard Library utility functions.
 
 ### `fanumar`
 Takes a string argument and tries to parse a number from it.
@@ -228,23 +252,22 @@ The parsed number is returned.
 
 On parsing failure, `nui` is returned.
 
+```
+hoho zic hoho fanumar "1234" oho oho <3 prints "1234"
+hoho zic hoho fanumar "1234" "doariakab" oho oho <3 prints <nui>
+hoho zic hoho fanumar "gg" "doariakab" oho oho <3 prints 2
+```
+
 ### `fatext`
 This will take as argument a number and return its string representation.
 
 Pass a second parameter to specify the way the number will be converted.
 
-This only converts to the Human format.
+This only converts to the Human format, because what Human other than Ed would understand what "gggnb ezzzz" means?
 
-### Comparison functions
-These functions compare their parameters. If the parameters are strings, it will compare them lexicographically.
-
-* `maimare`
-* `maimic`
-* `iegal`
-* `inegal`
-  
-### `invers`
-If its parameter evaluates as false, return 1. Otherwise, return 0.
+```
+hoho zic hoho fatext gggg oho oho <3 prints 4
+```
 
 ## Code examples
 
@@ -252,25 +275,23 @@ If its parameter evaluates as false, return 1. Otherwise, return 0.
 Task: define a function that returns 1 if its parameter is prime, and 0 otherwise.
 
 ```
-nu hoho deci prim ia pula si face
+nu hoho deci prim ia pula si fa
     nu deci i ii g <3 one
     nu deci p ii b <3 zero
     <3 if it's 1 then return 0
-    daca hoho iegal cu pula cu g atunci
+    daca pula egal g atunci fa
         iesi b
     gata
 
     <3 while i <= pula
-    nu deci interm ii hoho maimare cu i cu pula
-    cat timp hoho invers cu interm fa
-        daca hoho iegal cu pula modulo i cu b atunci
+    cat timp invers i maimare pula fa
+        daca pula modulo i egal b atunci fa
             p ii p plus g
         gata
 
         i ii i plus g
-        interm ii hoho maimare cu i cu pula
     gata
-    iesi hoho iegal cu p cu gg <3 if equal to 2, it's prime
+    iesi p egal gg <3 if equal to 2, it's prime
 gata
 
 nu deci v ii nui
