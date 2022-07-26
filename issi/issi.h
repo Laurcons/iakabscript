@@ -13,9 +13,11 @@ int main(int, char**);
 /// Abstract Syntax Tree stuff
 
 enum node_kind_t {
+    AST_EMPTY, // NULL
     AST_ROOT, // ast_array
     AST_NUM_LITERAL, // double
     AST_STR_LITERAL, // char*
+    AST_NUI_LITERAL, // NULL
     AST_ASSIGNMENT, // ast_assignment
     AST_DECLARATION, // ast_declaration
 };
@@ -41,9 +43,12 @@ array createArray();
 void freeArray(array);
 void addToArray(array, void*);
 
+ast_node createAstEmpty();
 ast_node createAstAssignment(char* varname, ast_node expr);
 ast_node createAstDeclaration(char* varname, ast_node expr);
 ast_node createAstNumLiteral(double val);
+ast_node createAstStrLiteral(char* str);
+ast_node createAstNuiLiteral();
 
 void astInit();
 ast_node addToRoot();
@@ -52,9 +57,9 @@ ast_node addToRoot();
 
 typedef enum symbol_kind_t {
     SYM_FUNCTION, // ast_node
-    SYM_VARIABLE_NUMBER,
-    SYM_VARIABLE_STRING,
-    SYM_VARIABLE_NUI
+    SYM_VARIABLE_NUMBER, // double
+    SYM_VARIABLE_STRING, // char*
+    SYM_VARIABLE_NUI // NULL
 } symbol_kind_t;
 
 typedef struct symbol_t {

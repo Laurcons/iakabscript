@@ -15,19 +15,32 @@
 
 %%
 
-\<3.*\n { /* comment */ }
+\<3.*\n { /* comment, but treat is as a PERIOD */ return PERIOD; }
 
 [\n\.] { return PERIOD; }
-<<EOF>> { return END; }
 [ \t]+ { /* ignore spaces and tabs */ }
 
+ /* expressions and words */
 "nu deci" { return NU_DECI; }
 "ii" { return II; }
+"nui" { return NUI; }
 
-g+ { yylval.num = strlen(yytext); return NUMBER; }
-ez+ { int x = 1; for (int i = 0; i < strlen(yytext) - 1; i++) x *= 10; yylval.num = x; return NUMBER; }
-eez+ { double x = 1; for (int i = 0; i < strlen(yytext) - 2; i++) x /= 10; yylval.num = x; return NUMBER; }
+ /* literals */
+g+ { yylval.num = strlen(yytext); return NUMBERLIT; }
+ez+ { int x = 1; for (int i = 0; i < strlen(yytext) - 1; i++) x *= 10; yylval.num = x; return NUMBERLIT; }
+eez+ { double x = 1; for (int i = 0; i < strlen(yytext) - 2; i++) x /= 10; yylval.num = x; return NUMBERLIT; }
 [nb]+ { return parseNBLit(); }
+\"[^\"]*\" {
+    // copy everything but without the quotes
+    char* buf = malloc(sizeof(char) * (strlen(yytext) - 1)); // - 2 + 1
+    for (int i = 0; i < strlen(yytext) - 2; i++) {
+        buf[i] = yytext[i+1];
+    }
+    yylval.text = buf;
+    return STRINGLIT;
+}
+
+ /* identifiers */
 [a-z]+ {
     yylval.text = strdup(yytext);
     for (int i = 0; i < strlen(yytext); i++)
@@ -45,5 +58,5 @@ int parseNBLit() {
         p *= 2;
     }
     yylval.num = res;
-    return NUMBER;
+    return NUMBERLIT;
 }

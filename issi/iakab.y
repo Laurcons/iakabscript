@@ -13,12 +13,12 @@ int yyerror(char*);
     ast_node node;
 }
 
-%token PERIOD END
-%token NU_DECI II
-%token <text> IDENTIFIER
-%token <num> NUMBER
+%token PERIOD
+%token NU_DECI II NUI
+%token <text> IDENTIFIER STRINGLIT
+%token <num> NUMBERLIT
 
-%type <node> assignment numberLiteral statement declaration
+%type <node> assignment literal statement declaration
 
 %start st
 
@@ -29,35 +29,41 @@ st:
     ;
 
 statements:
-  | statements statement
+  | statements statement PERIOD
     { addToArray(rootNode->payload, $2); }
     ;
 
 statement:
-    assignment
+    /* nothing */
+    { $$ = createAstEmpty(); }
+  | assignment
     { $$ = $1; }
   | declaration
     { $$ = $1; }
     ;
 
 assignment:
-    IDENTIFIER II numberLiteral PERIOD
+    IDENTIFIER II literal
     { $$ = createAstAssignment($1, $3); }
     ;
 
 declaration:
-    NU_DECI IDENTIFIER II numberLiteral PERIOD
+    NU_DECI IDENTIFIER II literal
     { $$ = createAstDeclaration($2, $4); }
     ;
 
-numberLiteral:
-    NUMBER
+literal:
+    NUI
+    { $$ = createAstNuiLiteral(); }
+  | NUMBERLIT
     { $$ = createAstNumLiteral($1); }
+  | STRINGLIT
+    { $$ = createAstStrLiteral($1); }
     ;
 
 %%
 
 int yyerror(char* err) {
     fprintf(stderr, "at %d: %s near `%s`\n", yylineno, err, yytext);
-    return 1;
+    exit(1);
 }

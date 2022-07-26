@@ -54,30 +54,51 @@ void _visitRoot(ast_node n) {
 void _visitAssignment(ast_node n) {
     printf("Visiting Assignment\n");
     ast_assignment asn = n->payload;
+    symbol sym = symtableGetVar(asn->identifier);
     if (asn->expr->type == AST_NUM_LITERAL) {
-        symbol sym = symtableGetVar(asn->identifier);
         sym->type = SYM_VARIABLE_NUMBER;
         sym->payload = asn->expr->payload;
         double d = *((double*)sym->payload);
         printf("set %s to %f\n", sym->identifier, d);
+    }
+    else if (asn->expr->type == AST_STR_LITERAL) {
+        sym->type = SYM_VARIABLE_STRING;
+        sym->payload = asn->expr->payload;
+        printf("set %s to \"%s\"\n", sym->identifier, (char*)sym->payload);
+    }
+    else if (asn->expr->type == AST_NUI_LITERAL) {
+        sym->type = SYM_VARIABLE_NUI;
+        sym->payload = NULL;
+        printf("set %s to nui\n", sym->identifier);
     }
 }
 
 void _visitDeclaration(ast_node n) {
     printf("Visiting Declaration\n");
     ast_declaration decl = n->payload;
+    symtableDeclareVar(decl->identifier);
+    symbol sym = symtableGetVar(decl->identifier);
     if (decl->expr->type == AST_NUM_LITERAL) {
-        symtableDeclareVar(decl->identifier);
-        symbol sym = symtableGetVar(decl->identifier);
         sym->type = SYM_VARIABLE_NUMBER;
         sym->payload = decl->expr->payload;
         double d = *((double*)sym->payload);
-        printf("set %s to %f\n", sym->identifier, d);
+        printf("declared %s to %f\n", sym->identifier, d);
+    }
+    else if (decl->expr->type == AST_STR_LITERAL) {
+        sym->type = SYM_VARIABLE_STRING;
+        sym->payload = decl->expr->payload;
+        printf("declared %s to \"%s\"\n", sym->identifier, (char*)sym->payload);
+    }
+    else if (decl->expr->type == AST_NUI_LITERAL) {
+        sym->type = SYM_VARIABLE_NUI;
+        sym->payload = NULL;
+        printf("declared %s to nui\n", sym->identifier);
     }
 }
 
 void _visitAst(ast_node n) {
     switch (n->type) {
+        case AST_EMPTY: /* nothing */; break;
         case AST_ROOT: _visitRoot(n); break;
         case AST_ASSIGNMENT: _visitAssignment(n); break;
         case AST_DECLARATION: _visitDeclaration(n); break;
@@ -117,6 +138,10 @@ ast_node _createAstNode(enum node_kind_t type, void* payload) {
     return n;
 };
 
+ast_node createAstEmpty() {
+    return _createAstNode(AST_EMPTY, NULL);
+}
+
 ast_node createAstAssignment(char* varname, ast_node expr) {
     ast_assignment asn = malloc(sizeof(ast_assignment_t));
     asn->identifier = strdup(varname);
@@ -135,6 +160,15 @@ ast_node createAstNumLiteral(double val) {
     double* d = malloc(sizeof(double));
     *d = val;
     return _createAstNode(AST_NUM_LITERAL, d);
+}
+
+ast_node createAstStrLiteral(char* str) {
+    char* buf = strdup(str);
+    return _createAstNode(AST_STR_LITERAL, str);
+}
+
+ast_node createAstNuiLiteral() {
+    return _createAstNode(AST_NUI_LITERAL, NULL);
 }
 
 void astInit() {
