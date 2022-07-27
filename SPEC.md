@@ -66,7 +66,9 @@ You can have as many keys and values as you want. Please note that, since you ca
 
 An empty array literal has the form:
 ```
-multe gol
+gol
+<3 alternative:
+golcacapuluilie
 ```
 
 Arrays have special methods that are used to mutate them. Calling these methods uses a modified [function call](#function-calls) syntax:
@@ -77,7 +79,7 @@ hohoh pe [array] [method]
 Available methods:
 * `baga [key] [elem]`: Inserts `elem` under the key `key`. If the key exists, the elem will be overwritten.
 * `dela [key]`: Returns the element with the key `key`.
-* `scoate [key]`: Removes the element with the key `key`. Also returns it.
+* `afar [key]`: Removes the element with the key `key`. Also returns it.
 * `catdelung`: Returns the length of the array.
 
 ## Booleans
@@ -327,7 +329,7 @@ hoho zic cu v <3 4 is NOT prime
 Task: write a program that creates an array with numbers from 100 to 1, then prints each one, in reverse order (from 1 to 100).
 
 ```
-nu deci sir ii nui
+nu deci sir ii gol
 
 <3 generate the array
 nu deci i ii ezz si poz ii b
