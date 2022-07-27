@@ -3,7 +3,7 @@
 This is the official language specification for IakabScript (IS).
 
 ## Version
-This spec is still a draft, and a work in progress. This spec will get version number v1.0 once the official interpreter is out. Until then, feel free to contribute with any suggestions or code examples.
+This spec is still a draft, and a work in progress. This spec will get version number v1.0 once the official interpreter is out. Until then, feel free to contribute with any suggestions or code examples, by contacting me.
 
 ## Profanity warning
 Please note that, while the language itself doesn't use profanity in its syntax, profanity is highly recommended when working with IS. The code examples here make extensive use of profanity.
@@ -17,6 +17,14 @@ A sentence is always followed by a DOT `.` or a NEWLINE `<NL>`. This means that 
 ```
 Nu deci ilie ii gggggggg
 Hoho dutedracu cu ilie oho. Hoho zic "duten pula" hoh
+```
+
+## Comments
+You can write a comment at any end of a line by appending `<3`. The rest of the line will be ignored.
+
+```
+Nu deci ilie ii nbbnbn <3 dal drecu
+<3 ce pula mea se intampla aici
 ```
 
 ## Number literals
@@ -47,11 +55,30 @@ nu deci pula ii nui
 ```
 
 ## Arrays
-TODO: define a method for how arrays would work.
 
-They would accept strings as indexes and _any_ object as values so they could realistically simulate objects, which would be really powerful.
+Arrays in IS are associative arrays. They work similarly to PHP arrays: they consist of key-value pairs, where the key must be a number or string, and the value can be a string, number, array, or `nui`.
 
-Mutating them would be done using either standard custom operators, or some utility functions defined in the SL.
+An array literal has the form:
+```
+multe [key] ii [value] cu [key] ii [value] si atat
+```
+You can have as many keys and values as you want. Please note that, since you cannot split lines in IS, an array literal can get unreadably long. But then again, Ed is unreadable...
+
+An empty array literal has the form:
+```
+multe gol
+```
+
+Arrays have special methods that are used to mutate them. Calling these methods uses a modified [function call](#function-calls) syntax:
+```
+hoho pe [array] [method] [params] hoh
+hohoh pe [array] [method]
+```
+Available methods:
+* `baga [key] [elem]`: Inserts `elem` under the key `key`. If the key exists, the elem will be overwritten.
+* `dela [key]`: Returns the element with the key `key`.
+* `scoate [key]`: Removes the element with the key `key`. Also returns it.
+* `catdelung`: Returns the length of the array.
 
 ## Booleans
 There are no booleans in IS. When evaluating a value as a condition, only a number value of zero is considered false. Everything else (including all strings) are true.
@@ -73,18 +100,10 @@ Invalid identifiers:
 * `nu`
 * `busimiaicoiele`
 
-## Comments
-You can write a comment at any end of a line by appending `<3`. The rest of the line will be ignored.
-
-```
-Nu deci ilie ii nbbnbn <3 dal drecu
-<3 ce pula mea se intampla aici
-```
-
-## Variable declarations (scalars)
+## Variable declarations
 Before you can use any variable, you must declare it inside its scope, and before it is used. I'm sure Ed doesn't like declaring his variables in advance, but sometimes he has to make compromises.
 
-Variables in IS don't have types: they are dynamic, and can hold any number or string type.
+Variables in IS don't have types: they are dynamic, and can hold any type.
 
 Declare a variable using `nu deci [identifier] ii [value]`.
 
@@ -100,14 +119,14 @@ nu deci ilie ii gggggggg si bubu ii nbnb. nu deci iacobu ii nbbbbbb
 ```
 
 ## Functions
-Functions can only be declared in the global scope, using the `hoho` keyword. They follow this general structure:
+Functions can only be declared in the global scope, using the `nu hoho deci` keyword. They follow this general structure:
 ```
 nu hoho deci [function_name] ia [parameters] si fa
 <3 function code here
 gata
 ```
 
-`function_name` needs to be a valid identifier. `parameters` is a list of formal parameter names, separated by `cu`. If the function takes no parameters, use `nimic` instead.
+`function_name` needs to be a valid identifier. `parameters` is a list of formal parameter names. If the function takes no parameters, use `nimic` instead.
 
 ```
 <3 valid syntax
@@ -116,7 +135,7 @@ nu hoho deci cplm ia nimic si fa
 gata
 
 <3 or
-nu hoho deci uatafac ia pula cu pizda cu dracu si fa
+nu hoho deci uatafac ia pula pizda dracu si fa
     <33333333
 gata
 ```
@@ -135,10 +154,10 @@ Call a function using the following syntax:
 * With parameters: `hoho [functionName] [params] hoh`
 * Without parameters: `hohoh [functionName]`
 
-Separate parameters using the `cu` keyword.
+Separate parameters with spaces.
 
 ```
-hoho uatafac pula cu pizda oho
+hoho uatafac pula pizda oho
 
 hohoh cplm
 ```
@@ -173,7 +192,7 @@ To read from the console, use the built-in function `zi`. It will read a string 
 
 ```
 nu deci pula ii gg si pizda ii nbnb
-hoho zic "dute dracu" cu pula cu pizda oho
+hoho zic "dute dracu" pula pizda oho
 ```
 ```
 nu deci coie ii hohoh zi
@@ -272,6 +291,7 @@ hoho zic hoho fatext gggg oho oho <3 prints 4
 ## Code examples
 
 ### Is prime?
+TODO: fix this code using new spec rules
 Task: define a function that returns 1 if its parameter is prime, and 0 otherwise.
 
 ```
@@ -301,4 +321,31 @@ v ii hoho prim cu ggg
 hoho zic cu v <3 3 is prime
 v ii hoho prim cu gggg
 hoho zic cu v <3 4 is NOT prime
+```
+
+### Counting
+Task: write a program that creates an array with numbers from 100 to 1, then prints each one, in reverse order (from 1 to 100).
+
+```
+nu deci sir ii nui
+
+<3 generate the array
+nu deci i ii ezz si poz ii b
+cat timp i maimare b fa
+
+    hoho pe sir baga poz i hoh <3 push i on position poz
+
+    b ii b plus g
+    i ii i minus g
+gata
+
+<3 print the array
+poz ii hohoh pe sir catdelung minus g <3 last position (count - 1)
+cat timp invers poz maimic b fa <3 poz >= 0
+
+    nu deci ilie ii hoho pe sir dela poz hoh
+    hoho zi ilie hoh
+
+gata
+
 ```
