@@ -12,12 +12,28 @@ Please note that, while the language itself doesn't use profanity in its syntax,
 
 All statements in IS are sentences. Ed never touches the Shift key, and instead either talks in all lowercase, or in all uppercase if shouting. Therefore, all sentences in IS are case-insensitive. This being said, it's your responsibility to make the source code's casing interesting.
 
-A sentence is always followed by a DOT `.` or a NEWLINE `<NL>`. This means that sentences **cannot** be split on multiple lines.
+A sentence is always followed by a DOT `.` or a NL `<NEWLINE>`.
 
 ```
 Nu deci ilie ii gggggggg
 Hoho dutedracu cu ilie oho. Hoho zic "duten pula" hoh
 ```
+
+### Line splitting
+You can split a sentence onto multiple lines by adding `stai` at the end of the lines.
+```
+nu deci stai
+ilie ii ggggggggggggg
+```
+
+All the text after `stai`, until the end of the line, will be ignored, so it is recommended that you harrass the reader of your code using your `stai` statements. There is a chance that your interpreter will get offended as well.
+```
+nu deci stai otara in pula mea ce te grabesti asa
+capuluilie ii stai sa imi amintesc
+gol <33333333333333
+```
+
+Please note that `stai` statements, although similar to comments, are functionally distinct.
 
 ## Comments
 You can write a comment at any end of a line by appending `<3`. The rest of the line will be ignored.
@@ -26,6 +42,9 @@ You can write a comment at any end of a line by appending `<3`. The rest of the 
 Nu deci ilie ii nbbnbn <3 dal drecu
 <3 ce pula mea se intampla aici
 ```
+Under the hood, a comment is treated as a DOT/NL.
+
+Please note that comments, although similar to `stai` statements, are functionally distinct.
 
 ## Number literals
 Ed doesn't type numbers in chat, and when he does, he surely hates doing it, so IS uses `gg`, `ez` and `nb` to represent number literals.
@@ -62,7 +81,7 @@ An array literal has the form:
 ```
 multe [key] ii [value] cu [key] ii [value] si atat
 ```
-You can have as many keys and values as you want. Please note that, since you cannot split lines in IS, an array literal can get unreadably long. But then again, Ed is unreadable...
+You can have as many keys and values as you want. Please note that, while [line splitting](#line-splitting) is permitted, you should think: would Ed split his lines? That's what I thought.
 
 An empty array literal has the form:
 ```
@@ -90,7 +109,7 @@ Identifiers are sequences of characters that identify things in your program, su
 
 **NOTE:** The interpreter you use determines whether it accepts Unicode source code or not. If not, the emoji notation is not possible.
 
-You cannot have an identifier that starts with `e`, `g`, `n` or `b`.
+You cannot have an identifier that starts with `e`, `g`, `n` or `b`, nor any reserved keyword.
 
 Valid identifiers:
 * `hohooo`
@@ -101,6 +120,7 @@ Invalid identifiers:
 * `cacat🥰🥰🥰`
 * `nu`
 * `busimiaicoiele`
+* `stai` or `deci` or `hoho` etc.
 
 ## Variable declarations
 Before you can use any variable, you must declare it inside its scope, and before it is used. I'm sure Ed doesn't like declaring his variables in advance, but sometimes he has to make compromises.
@@ -114,7 +134,7 @@ nu deci ilie ii gggggggggggg
 nu deci bubu ii nbnbnbbbnbnnnnbb
 ```
 
-You can write multiple declarations on a line by separating them with `si`. This is not recommended, as lines can get long, but when has this stopped Ed?
+You can write multiple declarations on a line by separating them with `si`. This is VERY recommended, as lines can get long, and is exactly what Ed would do.
 
 ```
 nu deci ilie ii gggggggg si bubu ii nbnb. nu deci iacobu ii nbbbbbb
@@ -293,7 +313,6 @@ hoho zic hoho fatext gggg oho oho <3 prints 4
 ## Code examples
 
 ### Is prime?
-TODO: fix this code using new spec rules
 Task: define a function that returns 1 if its parameter is prime, and 0 otherwise.
 
 ```
@@ -317,12 +336,12 @@ nu hoho deci prim ia pula si fa
 gata
 
 nu deci v ii nui
-v ii hoho prim cu gg
-hoho zic cu v <3 2 is prime
-v ii hoho prim cu ggg
-hoho zic cu v <3 3 is prime
-v ii hoho prim cu gggg
-hoho zic cu v <3 4 is NOT prime
+v ii hoho prim gg hoh
+hoho zic v hoh <3 2 is prime
+v ii hoho prim ggg hoh
+hoho zic v hoh <3 3 is prime
+v ii hoho prim gggg hoh
+hoho zic v hoh <3 4 is NOT prime
 ```
 
 ### Counting
