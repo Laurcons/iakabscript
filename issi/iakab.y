@@ -38,11 +38,11 @@ block:
 
 statements:
     /* empty */
-    { $$ = createArray(); }
+    { $$ = arr_create(); }
   | statements statement PERIOD
-    { addToArray($1, $2); $$ = $1; }
+    { arr_add($1, $2); $$ = $1; }
   | statements block
-    { addToArray($1, $2); $$ = $1; }
+    { arr_add($1, $2); $$ = $1; }
     ;
 
 statement:

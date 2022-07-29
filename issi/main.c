@@ -2,8 +2,6 @@
 #include "iakab.tab.h"
 #include "tokens.tab.h"
 
-void _visitAst(ast_node);
-
 int main(int argc, char** argv) {
     astInit();
     symtableInit();
@@ -20,5 +18,5 @@ int main(int argc, char** argv) {
     }
 
     yyparse();
-    _visitAst(rootNode);
+    visitAst();
 }
