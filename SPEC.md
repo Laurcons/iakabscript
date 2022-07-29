@@ -26,11 +26,16 @@ nu deci stai
 ilie ii ggggggggggggg
 ```
 
-All the text after `stai`, until the end of the line, will be ignored, so it is recommended that you harrass the reader of your code using your `stai` statements. There is a chance that your interpreter will get offended as well.
+All the text after `stai`, until the end of the line, will be ignored, so it is recommended that you harrass the reader of your code using your `stai` statements. Your interpreter might get offended as well... that is your own responsibility to handle.
 ```
 nu deci stai otara in pula mea ce te grabesti asa
 capuluilie ii stai sa imi amintesc
 gol <33333333333333
+```
+
+You can have as many `a`'s in your `stai` as you need to get your point across.
+```
+nu hoho deci staaaaaaaaaaaaaaaaai ce se intampla aici
 ```
 
 Please note that `stai` statements, although similar to comments, are functionally distinct.
