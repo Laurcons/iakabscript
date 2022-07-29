@@ -15,6 +15,7 @@
 
 %%
 
+ /* on every token that consumes a NL, add a yyline++ */
 \<3.*\n { /* comment, but treat is as a PERIOD */ yyline++; return PERIOD; }
 sta+i(.*)\n { /* 'stai' line break, ignore it and continue sentence parsing */ yyline++; }
 
