@@ -14,7 +14,7 @@ int main(int, char**);
 
 enum node_kind_t {
     AST_EMPTY, // NULL
-    AST_ROOT, // ast_array
+    AST_BLOCK, // ast_array
     AST_NUM_LITERAL, // double
     AST_STR_LITERAL, // char*
     AST_NUI_LITERAL, // NULL
@@ -44,6 +44,7 @@ void freeArray(array);
 void addToArray(array, void*);
 
 ast_node createAstEmpty();
+ast_node createAstBlock(array arr);
 ast_node createAstAssignment(char* varname, ast_node expr);
 ast_node createAstDeclaration(char* varname, ast_node expr);
 ast_node createAstNumLiteral(double val);

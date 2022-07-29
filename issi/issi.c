@@ -1,7 +1,16 @@
 #include "issi.h"
+#include <stdarg.h>
 
-void stopHard(char* message) {
-    fprintf(stderr, "runtime error: %s\n", message);
+// internal
+void stopHard(char* format, ...) {
+    va_list args;
+    va_start(args, format);
+    char* newFormat = (char*)malloc(sizeof(char) * (strlen(format) + 17));
+    strcpy(newFormat, "runtime error: ");
+    strcat(newFormat, format);
+    strcat(newFormat, "\n");
+    fprintf(stderr, newFormat, args);
+    free(newFormat);
     exit(0);
 }
 
@@ -16,7 +25,7 @@ void symtableDeclareVar(char* identifier) {
     for (int i = 0; i < symtable->len; i++) {
         symbol sym = symtable->stuff[i];
         if (strcmp(sym->identifier, identifier) == 0)
-            stopHard("Variable already declared");
+            stopHard("Variable %s already declared", sym->identifier);
     }
     // add a new one
     symbol sym = malloc(sizeof(symbol_t));
@@ -44,8 +53,8 @@ symbol symtableGetVar(char* identifier) {
 
 void _visitAst(ast_node);
 
-void _visitRoot(ast_node n) {
-    printf("Visiting Root\n");
+void _visitBlock(ast_node n) {
+    printf("Visiting Block\n");
     array arr = n->payload;
     for (int i = 0; i < arr->len; i++)
         _visitAst(arr->stuff[i]);
@@ -97,12 +106,13 @@ void _visitDeclaration(ast_node n) {
 }
 
 void _visitAst(ast_node n) {
+    //printf("Visiting type %d\n", n->type);
     switch (n->type) {
         case AST_EMPTY: /* nothing */; break;
-        case AST_ROOT: _visitRoot(n); break;
+        case AST_BLOCK: _visitBlock(n); break;
         case AST_ASSIGNMENT: _visitAssignment(n); break;
         case AST_DECLARATION: _visitDeclaration(n); break;
-        default: stopHard("AST node type not handled"); break;
+        default: stopHard("AST node type %d not handled", n->type); break;
     }
 }
 
@@ -142,6 +152,10 @@ ast_node createAstEmpty() {
     return _createAstNode(AST_EMPTY, NULL);
 }
 
+ast_node createAstBlock(array arr) {
+    return _createAstNode(AST_BLOCK, arr);
+}
+
 ast_node createAstAssignment(char* varname, ast_node expr) {
     ast_assignment asn = malloc(sizeof(ast_assignment_t));
     asn->identifier = strdup(varname);
@@ -172,5 +186,5 @@ ast_node createAstNuiLiteral() {
 }
 
 void astInit() {
-    rootNode = _createAstNode(AST_ROOT, createArray());
+    //rootNode = createAstBlock(createArray());
 }

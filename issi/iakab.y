@@ -3,7 +3,7 @@
 #include "issi.h"
 
 extern char* yytext;
-extern int yyin, yylineno;
+extern int yyin, yyline;
 int yyerror(char*);
 %}
 
@@ -11,14 +11,16 @@ int yyerror(char*);
     char* text;
     double num;
     ast_node node;
+    array arr;
 }
 
 %token PERIOD
-%token NU_DECI II NUI
+%token NU_DECI NU_HOHO_DECI FA GATA II NUI
 %token <text> IDENTIFIER STRINGLIT
 %token <num> NUMBERLIT
 
-%type <node> assignment literal statement declaration
+%type <node> assignment literal statement declaration block
+%type <arr> statements
 
 %start st
 
@@ -26,11 +28,21 @@ int yyerror(char*);
 
 st:
     statements
+    { rootNode = createAstBlock($1); }
     ;
 
+block:
+  FA PERIOD statements GATA
+  { $$ = createAstBlock($3); }
+  ;
+
 statements:
+    /* empty */
+    { $$ = createArray(); }
   | statements statement PERIOD
-    { addToArray(rootNode->payload, $2); }
+    { addToArray($1, $2); $$ = $1; }
+  | statements block
+    { addToArray($1, $2); $$ = $1; }
     ;
 
 statement:
@@ -64,6 +76,6 @@ literal:
 %%
 
 int yyerror(char* err) {
-    fprintf(stderr, "at %d: %s near `%s`\n", yylineno, err, yytext);
+    fprintf(stderr, "at %d: %s near `%s`\n", yyline, err, yytext);
     exit(1);
 }

@@ -15,15 +15,19 @@
 
 %%
 
-\<3.*\n { /* comment, but treat is as a PERIOD */ return PERIOD; }
+\<3.*\n { /* comment, but treat is as a PERIOD */ yyline++; return PERIOD; }
+sta+i(.*)\n { /* 'stai' line break, ignore it and continue sentence parsing */ yyline++; }
 
-[\n\.] { return PERIOD; }
+[\n\.] { yyline++; return PERIOD; }
 [ \t]+ { /* ignore spaces and tabs */ }
 
  /* expressions and words */
 "nu deci" { return NU_DECI; }
+"nu hoho deci" { return NU_HOHO_DECI; }
 "ii" { return II; }
 "nui" { return NUI; }
+"fa" { return FA; }
+"gata" { return GATA; }
 
  /* literals */
 g+ { yylval.num = strlen(yytext); return NUMBERLIT; }
