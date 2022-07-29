@@ -64,13 +64,22 @@ void _visitDeclaration(ast_node n) {
     }
 }
 
+void _visitFunctionCall(ast_node n) {
+    printf("Visiting FunctionCall\n");
+    ast_functioncall fcall = n->payload;
+    symbol_function symf = symtableGetFunction(fcall->identifier);
+    // with no care in the world, just execute the block gg
+    _visitAst(symf->block);
+}
+
 void _visitAst(ast_node n) {
-    //printf("Visiting type %d\n", n->type);
     switch (n->type) {
         case AST_EMPTY: /* nothing */; break;
         case AST_BLOCK: _visitBlock(n); break;
         case AST_ASSIGNMENT: _visitAssignment(n); break;
         case AST_DECLARATION: _visitDeclaration(n); break;
+        case AST_FUNCTIONDEF: break;
+        case AST_FUNCTIONCALL: _visitFunctionCall(n); break;
         default: stopHard("AST node type %d not handled", n->type); break;
     }
 }

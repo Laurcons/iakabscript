@@ -15,12 +15,14 @@ int yyerror(char*);
 }
 
 %token PERIOD
-%token NU_DECI NU_HOHO_DECI FA GATA II NUI
+%token NU_DECI NU_HOHO_DECI FA GATA II IA SI NUI NIMIC
+%token HOHOH HOHO HOH
 %token <text> IDENTIFIER STRINGLIT
 %token <num> NUMBERLIT
 
 %type <node> assignment literal statement declaration block
-%type <arr> statements
+%type <node> functionDef functionCall
+%type <arr> statements formalParamList
 
 %start st
 
@@ -52,6 +54,29 @@ statement:
     { $$ = $1; }
   | declaration
     { $$ = $1; }
+  | functionDef
+    { $$ = $1; }
+  | functionCall
+    { $$ = $1; }
+    ;
+
+functionCall:
+    HOHOH IDENTIFIER
+    { $$ = createAstFunctionCall($2, arr_create()); }
+    ;
+
+functionDef:
+    NU_HOHO_DECI IDENTIFIER IA NIMIC SI block
+    { $$ = createAstFunctionDef($2, arr_create(), $6); }
+  | NU_HOHO_DECI IDENTIFIER IA formalParamList SI block
+    { $$ = createAstFunctionDef($2, $4, $6); }
+    ;
+
+formalParamList:
+    /* nothing */
+    { $$ = arr_create(); }
+  | formalParamList IDENTIFIER
+    { arr_add($1, $2); }
     ;
 
 assignment:

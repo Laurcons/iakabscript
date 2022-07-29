@@ -13,5 +13,6 @@ int main(int, char**);
 #include "symtable.h"
 #include "ast_create.h"
 #include "ast_visit.h"
+#include "ast_visit_init.h"
 
 #endif // !ISSI_H_INCLUDED

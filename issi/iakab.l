@@ -2,6 +2,8 @@
 %option caseless
 
 %{
+    #pragma GCC diagnostic push
+    #pragma GCC diagnostic ignored "-Wunused-function"
     #include "issi.h"
     #include "iakab.tab.h"
     int yyparse();
@@ -25,6 +27,12 @@ sta+i(.*)\n { /* 'stai' line break, ignore it and continue sentence parsing */ y
  /* expressions and words */
 "nu deci" { return NU_DECI; }
 "nu hoho deci" { return NU_HOHO_DECI; }
+"hohoh" { return HOHOH; }
+"hoho" { return HOHO; }
+"hoh" { return HOH; }
+"ia" { return IA; }
+"si" { return SI; }
+"nimic" { return NIMIC; }
 "ii" { return II; }
 "nui" { return NUI; }
 "fa" { return FA; }

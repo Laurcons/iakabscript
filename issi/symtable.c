@@ -22,8 +22,15 @@ void symtableDeclareVar(char* identifier) {
     arr_add(symtable, sym);
 }
 
-void symtableDeclareFunction(char* identifier, ast_node fpointer) {
-    // TODO:
+void symtableDeclareFunction(char* identifier, ast_functiondef fdef) {
+    symbol sym = malloc(sizeof(symbol_t));
+    sym->identifier = identifier;
+    sym->type = SYM_FUNCTION;
+    symbol_function symf = malloc(sizeof(symbol_function_t));
+    symf->block = fdef->block;
+    symf->paramCount = fdef->formalParams->len;
+    sym->payload = symf;
+    arr_add(symtable, sym);
 }
 
 symbol symtableGetVar(char* identifier) {
@@ -33,6 +40,17 @@ symbol symtableGetVar(char* identifier) {
         if (strcmp(sym->identifier, identifier) == 0)
             return sym;
     }
-    stopHard("Variable not found when getting");
+    stopHard("Variable %s not found when getting", identifier);
+    return NULL; // will not be called
+}
+
+symbol_function symtableGetFunction(char* identifier) {
+    // search for it
+    for (int i = 0; i < symtable->len; i++) {
+        symbol sym = symtable->stuff[i];
+        if (strcmp(sym->identifier, identifier) == 0)
+            return sym->payload;
+    }
+    stopHard("Function %s not found", identifier);
     return NULL; // will not be called
 }

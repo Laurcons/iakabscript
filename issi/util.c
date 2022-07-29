@@ -11,7 +11,7 @@ void stopHard(char* format, ...) {
     strcpy(newFormat, "runtime error: ");
     strcat(newFormat, format);
     strcat(newFormat, "\n");
-    fprintf(stderr, newFormat, args);
+    vfprintf(stderr, newFormat, args);
     free(newFormat);
     exit(0);
 }

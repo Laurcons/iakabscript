@@ -25,10 +25,25 @@ ast_node createAstAssignment(char* varname, ast_node expr) {
 }
 
 ast_node createAstDeclaration(char* varname, ast_node expr) {
-    ast_declaration asn = malloc(sizeof(ast_declaration_t));
-    asn->identifier = strdup(varname);
-    asn->expr = expr;
-    return _createAstNode(AST_DECLARATION, asn);
+    ast_declaration dcl = malloc(sizeof(ast_declaration_t));
+    dcl->identifier = strdup(varname);
+    dcl->expr = expr;
+    return _createAstNode(AST_DECLARATION, dcl);
+}
+
+ast_node createAstFunctionDef(char* fname, array formalParams, ast_node block) {
+    ast_functiondef fdef = malloc(sizeof(ast_functiondef_t));
+    fdef->identifier = strdup(fname);
+    fdef->block = block;
+    fdef->formalParams = formalParams;
+    return _createAstNode(AST_FUNCTIONDEF, fdef);
+}
+
+ast_node createAstFunctionCall(char* fname, array actualParams) {
+    ast_functioncall fcall = malloc(sizeof(ast_functioncall_t));
+    fcall->identifier = strdup(fname);
+    fcall->actualParams = actualParams;
+    return _createAstNode(AST_FUNCTIONCALL, fcall);
 }
 
 ast_node createAstNumLiteral(double val) {
@@ -39,7 +54,7 @@ ast_node createAstNumLiteral(double val) {
 
 ast_node createAstStrLiteral(char* str) {
     char* buf = strdup(str);
-    return _createAstNode(AST_STR_LITERAL, str);
+    return _createAstNode(AST_STR_LITERAL, buf);
 }
 
 ast_node createAstNuiLiteral() {
