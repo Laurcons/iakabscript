@@ -13,8 +13,8 @@ void _visitAst(ast_node);
 
 void _executeBuiltin(char* identifier, array actualParams) {
     if (strcmp(identifier, "zic") == 0) {
-        printf("Builtin call to zic with %d params\n", actualParams->len);
-        printf("ZIC CALL: ");
+        dbgprintf("Builtin call to zic with %d params\n", actualParams->len);
+        dbgprintf("ZIC CALL: ");
         for (int i = 0; i < actualParams->len; i++) {
             value_immediate vimm = _evalExpr(actualParams->stuff[i]);
             switch (vimm->type) {
@@ -30,6 +30,7 @@ void _executeBuiltin(char* identifier, array actualParams) {
                     break;
                 }
             }
+            vimm_free(vimm);
             printf(" ");
         }
         printf("\n");
@@ -51,16 +52,16 @@ value_immediate _evalExpr(ast_node n) {
         double* p = malloc(sizeof(double));
         *p = *((double*)n->payload);
         vimm->payload = p;
-        printf("expression AST_NUM_LITERAL is %f\n", *p);
+        dbgprintf("expression AST_NUM_LITERAL is %f\n", *p);
     }
     else if (n->type == AST_STR_LITERAL) {
         vimm->type = VAL_STRING;
         vimm->payload = strdup(n->payload);
-        printf("expression AST_STR_LITERAL is %s\n", (char*)n->payload);
+        dbgprintf("expression AST_STR_LITERAL is %s\n", (char*)n->payload);
     }
     else if (n->type == AST_NUI_LITERAL) {
         vimm->type = VAL_NUI;
-        printf("expression AST_NUI_LITERAL\n");
+        dbgprintf("expression AST_NUI_LITERAL\n");
     } else if (n->type == AST_IDENTIFIER_LITERAL) {
         char* identifier = n->payload;
         symbol sym = symtableGetVar(identifier);
@@ -69,10 +70,10 @@ value_immediate _evalExpr(ast_node n) {
         value_immediate othervimm = sym->payload;
         vimm_free(vimm);
         vimm = vimm_copy(othervimm);
-        printf("expression AST_IDENTIFIER_LITERAL (%s)\n", sym->identifier);
+        dbgprintf("expression AST_IDENTIFIER_LITERAL (%s)\n", sym->identifier);
     } else if (n->type == AST_BINARYOP) {
         ast_binaryop bop = n->payload;
-        printf("Operator %d at binaryop\n", bop->operator);
+        dbgprintf("Operator %d at binaryop\n", bop->operator);
         value_immediate vimmleft = _evalExpr(bop->left);
         value_immediate vimmright = _evalExpr(bop->right);
         if (bop->operator == OP_PLUS) {
@@ -84,7 +85,7 @@ value_immediate _evalExpr(ast_node n) {
             *p = *pleft + *pright;
             vimm->type = VAL_NUMBER;
             vimm->payload = p;
-            printf("expression AST_BINARYOP (OP_PLUS) is %f\n", *p);
+            dbgprintf("expression AST_BINARYOP (OP_PLUS) is %f\n", *p);
         } else if (bop->operator == OP_ORI) {
             _assertImmediateType(vimmleft, VAL_NUMBER);
             _assertImmediateType(vimmright, VAL_NUMBER);
@@ -94,7 +95,7 @@ value_immediate _evalExpr(ast_node n) {
             *p = (*pleft) * (*pright);
             vimm->type = VAL_NUMBER;
             vimm->payload = p;
-            printf("expression AST_BINARYOP (OP_ORI) is %f\n", *p);
+            dbgprintf("expression AST_BINARYOP (OP_ORI) is %f\n", *p);
         } else {
             stopHard("Unknown operator_kind_t %d at evalExpr\n", bop->operator);
         }
@@ -112,21 +113,21 @@ int visitAst() {
 }
 
 void _visitBlock(ast_node n) {
-    printf("Visiting Block\n");
+    dbgprintf("Visiting Block\n");
     array arr = n->payload;
     for (int i = 0; i < arr->len; i++)
         _visitAst(arr->stuff[i]);
 }
 
 void _visitAssignment(ast_node n) {
-    printf("Visiting Assignment\n");
+    dbgprintf("Visiting Assignment\n");
     ast_assignment asn = n->payload;
     symbol sym = symtableGetVar(asn->identifier);
     sym->payload = _evalExpr(asn->expr);
 }
 
 void _visitDeclaration(ast_node n) {
-    printf("Visiting Declaration\n");
+    dbgprintf("Visiting Declaration\n");
     ast_declaration decl = n->payload;
     symtableDeclareVar(decl->identifier);
     symbol sym = symtableGetVar(decl->identifier);
@@ -135,7 +136,7 @@ void _visitDeclaration(ast_node n) {
 }
 
 void _visitFunctionCall(ast_node n) {
-    printf("Visiting FunctionCall\n");
+    dbgprintf("Visiting FunctionCall\n");
     ast_functioncall fcall = n->payload;
     if (symtableIsBuiltin(fcall->identifier)) {
         _executeBuiltin(fcall->identifier, fcall->actualParams);

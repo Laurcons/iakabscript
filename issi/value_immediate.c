@@ -1,4 +1,5 @@
 #include "value_immediate.h"
+#include "util.h"
 #include <stdlib.h>
 #include <string.h>
 
@@ -30,6 +31,8 @@ value_immediate vimm_copy(value_immediate other) {
         case VAL_NUMBER: return vimm_createNumber(*((double*)other->payload));
         case VAL_STRING: return vimm_createString(strdup((char*)other->payload));
     }
+    stopHard("Unknown value_kind_t %d\n", other->type);
+    return NULL;
 }
 
 void vimm_free(value_immediate vimm) {

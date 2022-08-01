@@ -2,5 +2,6 @@
 #define UTIL_H_INCLUDED
 
 void stopHard(char* format, ...);
+void dbgprintf(char* format, ...);
 
 #endif

@@ -17,10 +17,10 @@ int main(int argc, char** argv) {
         yydebug = 1;
     }
 
-    printf("-- Parsing code\n");
+    dbgprintf("-- Parsing code\n");
     yyparse();
-    printf("-- Parsing symbols\n");
+    dbgprintf("-- Parsing symbols\n");
     initialVisitAst();
-    printf("-- Executing code\n");
+    dbgprintf("-- Executing code\n");
     visitAst();
 }

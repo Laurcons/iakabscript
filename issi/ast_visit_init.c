@@ -19,10 +19,10 @@ static void _visitBlock(ast_node n) {
 }
 
 static void _visitFunctionDef(ast_node n) {
-    printf("Visiting FunctionDef\n");
+    dbgprintf("Visiting FunctionDef\n");
     ast_functiondef fdef = n->payload;
     symtableDeclareFunction(fdef->identifier, fdef);
-    printf("declared function %s with %d parameters\n",
+    dbgprintf("declared function %s with %d parameters\n",
         fdef->identifier,
         fdef->formalParams->len
     );

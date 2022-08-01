@@ -15,3 +15,11 @@ void stopHard(char* format, ...) {
     free(newFormat);
     exit(0);
 }
+
+void dbgprintf(char* format, ...) {
+#ifdef VERBOSE
+    va_list args;
+    va_start(args, format);
+    vprintf(format, args);
+#endif
+}

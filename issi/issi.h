@@ -10,6 +10,7 @@ int main(int, char**);
 #include <string.h>
 #include <ctype.h>
 
+#include "util.h"
 #include "symtable.h"
 #include "ast_create.h"
 #include "ast_visit.h"
