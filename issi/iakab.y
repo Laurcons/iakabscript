@@ -18,12 +18,12 @@ int yyerror(char*);
 %token PERIOD
 %token NU_DECI NU_HOHO_DECI FA GATA II IA SI NUI NIMIC
 %token HOHOH HOHO HOH
-%token <optype> PLUS MINUS ORI IMPARTIT_LA
+%token PLUS MINUS ORI IMPARTIT_LA
 %token <text> IDENTIFIER STRINGLIT
 %token <num> NUMBERLIT
 
 %type <node> assignment literal statement declaration block
-%type <node> functionDef functionCall expression
+%type <node> functionDef functionCall expression expression1
 %type <arr> statements formalParamList
 
 %start st
@@ -103,12 +103,21 @@ literal:
     ;
 
 expression:
+    expression1
+    { $$ = $1; }
+  | expression PLUS expression1
+    { $$ = createAstBinaryOp(OP_PLUS, $1, $3); }
+  | expression MINUS expression1
+    { $$ = createAstBinaryOp(OP_MINUS, $1, $3); }
+    ;
+
+expression1:
     literal
     { $$ = $1; }
-  | expression PLUS literal
-    { $$ = createAstBinaryOp(OP_PLUS, $1, $3); }
-  | expression MINUS literal
-    { $$ = createAstBinaryOp(OP_MINUS, $1, $3); }
+  | expression1 ORI literal
+    { $$ = createAstBinaryOp(OP_ORI, $1, $3); }
+  | expression1 IMPARTIT_LA literal
+    { $$ = createAstBinaryOp(OP_IMPARTIT_LA, $1, $3); }
     ;
 
 %%

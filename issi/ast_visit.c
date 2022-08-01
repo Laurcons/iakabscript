@@ -54,6 +54,16 @@ value_immediate _evalExpr(ast_node n) {
             vimm->type = VAL_NUMBER;
             vimm->payload = p;
             printf("expression AST_BINARYOP (OP_PLUS) is %f\n", *p);
+        } else if (bop->operator == OP_ORI) {
+            _assertImmediateType(vimmleft, VAL_NUMBER);
+            _assertImmediateType(vimmright, VAL_NUMBER);
+            double* pleft = vimmleft->payload;
+            double* pright = vimmright->payload;
+            double* p = malloc(sizeof(double));
+            *p = (*pleft) * (*pright);
+            vimm->type = VAL_NUMBER;
+            vimm->payload = p;
+            printf("expression AST_BINARYOP (OP_ORI) is %f\n", *p);
         } else {
             stopHard("Unknown operator_kind_t %d at evalExpr\n", bop->operator);
         }
