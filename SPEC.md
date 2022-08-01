@@ -232,7 +232,7 @@ The following table lists all IS operators, in order of precedence (topmost have
 Keyword | Category | Name | Priority | Observations
 --------|----------|------|----------|-------------
 X `egal` X | equality | equal | 1
-X `inegal` X | equality | not equal | 1
+X `nuegal` X | equality | not equal | 1
 `invers` X | boolean | logical negation | 2
 X `sau` X | boolean | logical OR | 2
 X `deodata cu` X | boolean | logical AND | 2 | `si` is already a reserved keyword
