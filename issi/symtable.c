@@ -1,6 +1,7 @@
 #include "symtable.h"
 #include "util.h"
 #include "array.h"
+#include "value_immediate.h"
 #include <string.h>
 #include <stdlib.h>
 
@@ -18,7 +19,8 @@ void symtableDeclareVar(char* identifier) {
     // add a new one
     symbol sym = malloc(sizeof(symbol_t));
     sym->identifier = strdup(identifier);
-    sym->type = SYM_VARIABLE_NUI;
+    sym->type = SYM_VARIABLE;
+    sym->payload = vimm_createNui();
     arr_add(symtable, sym);
 }
 

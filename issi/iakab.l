@@ -25,6 +25,13 @@ sta+i(.*)\n { /* 'stai' line break, ignore it and continue sentence parsing */ y
 [ \t]+ { /* ignore spaces and tabs */ }
 
  /* expressions and words */
+ /* operators */
+"plus" { yylval.optype = OP_PLUS; return PLUS; }
+"minus" { yylval.optype = OP_MINUS; return MINUS; }
+"ori" { yylval.optype = OP_ORI; return ORI; }
+"impartit la" { yylval.optype = OP_IMPARTIT_LA; return IMPARTIT_LA; }
+
+ /* control and declaration keywords */
 "nu deci" { return NU_DECI; }
 "nu hoho deci" { return NU_HOHO_DECI; }
 "hohoh" { return HOHOH; }

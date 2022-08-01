@@ -12,16 +12,18 @@ int yyerror(char*);
     double num;
     ast_node node;
     array arr;
+    enum operator_kind_t optype;
 }
 
 %token PERIOD
 %token NU_DECI NU_HOHO_DECI FA GATA II IA SI NUI NIMIC
 %token HOHOH HOHO HOH
+%token <optype> PLUS MINUS ORI IMPARTIT_LA
 %token <text> IDENTIFIER STRINGLIT
 %token <num> NUMBERLIT
 
 %type <node> assignment literal statement declaration block
-%type <node> functionDef functionCall
+%type <node> functionDef functionCall expression
 %type <arr> statements formalParamList
 
 %start st
@@ -85,7 +87,7 @@ assignment:
     ;
 
 declaration:
-    NU_DECI IDENTIFIER II literal
+    NU_DECI IDENTIFIER II expression
     { $$ = createAstDeclaration($2, $4); }
     ;
 
@@ -96,6 +98,17 @@ literal:
     { $$ = createAstNumLiteral($1); }
   | STRINGLIT
     { $$ = createAstStrLiteral($1); }
+  | IDENTIFIER
+    { $$ = createAstIdentifierLiteral($1); }
+    ;
+
+expression:
+    literal
+    { $$ = $1; }
+  | expression PLUS literal
+    { $$ = createAstBinaryOp(OP_PLUS, $1, $3); }
+  | expression MINUS literal
+    { $$ = createAstBinaryOp(OP_MINUS, $1, $3); }
     ;
 
 %%

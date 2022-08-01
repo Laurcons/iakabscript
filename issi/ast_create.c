@@ -61,6 +61,18 @@ ast_node createAstNuiLiteral() {
     return _createAstNode(AST_NUI_LITERAL, NULL);
 }
 
+ast_node createAstIdentifierLiteral(char* identifier) {
+    return _createAstNode(AST_IDENTIFIER_LITERAL, strdup(identifier));
+}
+
+ast_node createAstBinaryOp(enum operator_kind_t op, ast_node left, ast_node right) {
+    ast_binaryop bop = malloc(sizeof(ast_binaryop_t));
+    bop->operator = op;
+    bop->left = left;
+    bop->right = right;
+    return _createAstNode(AST_BINARYOP, bop);
+}
+
 void astInit() {
     //rootNode = createAstBlock(arr_create());
 }

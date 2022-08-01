@@ -15,6 +15,10 @@ ast_node createAstFunctionCall(char* fname, array actualParams);
 ast_node createAstNumLiteral(double val);
 ast_node createAstStrLiteral(char* str);
 ast_node createAstNuiLiteral();
+ast_node createAstIdentifierLiteral(char* identifier);
+
+ast_node createAstBinaryOp(enum operator_kind_t op, ast_node left, ast_node right);
+ast_node createAstUnaryOp(enum operator_kind_t op, ast_node right);
 
 void astInit();
 
