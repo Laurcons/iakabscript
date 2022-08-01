@@ -9,7 +9,7 @@
 
 void _assertImmediateType(value_immediate vimm, enum value_kind_t type) {
     if (vimm->type != type) {
-        stopHard("Type of immediate was expected to be %d but is %d\n", type, vimm->type);
+        stopHard("Type (value_kind_t) of immediate was expected to be %d but is %d\n", type, vimm->type);
     }
 }
 
