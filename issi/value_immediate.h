@@ -17,6 +17,7 @@ value_immediate vimm_createNumber(double d);
 value_immediate vimm_createNui();
 
 value_immediate vimm_copy(value_immediate other);
+int vimm_equals(value_immediate first, value_immediate second);
 
 void vimm_free(value_immediate vimm);
 

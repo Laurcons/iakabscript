@@ -13,9 +13,6 @@ int main(int argc, char** argv) {
         }
         return 0;
     }
-    if (argc == 2 && strcmp(argv[1], "--debug") == 0) {
-        yydebug = 1;
-    }
 
     dbgprintf("-- Parsing code\n");
     yyparse();

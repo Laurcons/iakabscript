@@ -26,6 +26,9 @@ sta+i(.*)\n { /* 'stai' line break, ignore it and continue sentence parsing */ y
 
  /* expressions and words */
  /* operators */
+"egal" { return EGAL; }
+"nuegal" { return NUEGAL; }
+"invers" { return INVERS; }
 "plus" { return PLUS; }
 "minus" { return MINUS; }
 "ori" { return ORI; }

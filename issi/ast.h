@@ -20,10 +20,14 @@ enum node_kind_t {
 
 enum operator_kind_t {
     // binary ops
+    OP_EGAL,
+    OP_NUEGAL,
     OP_PLUS,
     OP_MINUS,
     OP_ORI,
     OP_IMPARTIT_LA,
+    // unary ops
+    OP_INVERS,
 };
 
 typedef struct {
