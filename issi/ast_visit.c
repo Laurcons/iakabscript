@@ -55,7 +55,7 @@ value_immediate _evalExpr(ast_node n) {
             vimm->payload = p;
             printf("expression AST_BINARYOP (OP_PLUS) is %f\n", *p);
         } else {
-            printf("Unknown operator_kind_t %d at evalExpr\n", bop->operator);
+            stopHard("Unknown operator_kind_t %d at evalExpr\n", bop->operator);
         }
         vimm_free(vimmleft);
         vimm_free(vimmright);
