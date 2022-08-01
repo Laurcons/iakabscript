@@ -11,6 +11,7 @@ See `in.txt` for some example code (i use that for testing).
 * Complains and stops immediately on any sort of error.
 * Throws errors when variables are redeclared, or when they are referenced but not previously declared.
 * Supports `fa..gata` blocks with any nesting level.
+* Can parse expressions (currently only supports operators PLUS and ORI).
 
 ## How it does it
 You should know basic interpreter design before diving into the code, but basically, this code does the following:
