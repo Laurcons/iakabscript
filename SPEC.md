@@ -235,22 +235,26 @@ X `egal` X | equality | equal | 1
 X `inegal` X | equality | not equal | 1
 `invers` X | boolean | logical negation | 2
 X `sau` X | boolean | logical OR | 2
-X `deodatacu` X | boolean | logical AND | 2 | `si` is already a reserved keyword
+X `deodata cu` X | boolean | logical AND | 2 | `si` is already a reserved keyword
 X `maimare` X | comparison | more than | 3
 X `maimic` X | comparison | less than | 3
 X `plus` X | arithmetic | addition | 4
 X `minus` X | arithmetic | subtraction | 4
-`minus` X | arithmetic | negation | 4
-X `ori` X | arithmetic | multiplication | 4
-X `impartit la` X | arithmetic | division | 4
-X `modulo` X | arithmetic | modulo | 4
+X `ori` X | arithmetic | multiplication | 5
+X `impartit la` X | arithmetic | division | 5
+X `modulo` X | arithmetic | modulo | 5
+`minus` X | arithmetic | negation | 6
 
 There are no parantheses in IS. If they were, Ed wouldn't use them. To simulate overriding priority, just use a sequence of variable assignments.
+
+Boolean operators will return 0 for false and 1 for true.
+
+Mentions:
 
 * Comparison and equality operators work with strings by comparing lexicographically.
 * The PLUS operator works with strings by returning a concatenated string.
 
-TODO: extend functionality with arrays?
+TODO: extend functionality with arrays (will be done once progress on ISSI reaches this point)
 
 ## Assignment
 Assign an expression to a variable using the `ii` keyword.
