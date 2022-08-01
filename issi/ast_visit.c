@@ -6,6 +6,37 @@
 #include "value_immediate.h"
 #include <stdio.h>
 #include <string.h>
+#include <math.h>
+
+value_immediate _evalExpr(ast_node n);
+void _visitAst(ast_node);
+
+void _executeBuiltin(char* identifier, array actualParams) {
+    if (strcmp(identifier, "zic") == 0) {
+        printf("Builtin call to zic with %d params\n", actualParams->len);
+        printf("ZIC CALL: ");
+        for (int i = 0; i < actualParams->len; i++) {
+            value_immediate vimm = _evalExpr(actualParams->stuff[i]);
+            switch (vimm->type) {
+                case VAL_NUI:
+                    printf("<nui>"); break;
+                case VAL_STRING:
+                    printf("%s", (char*)vimm->payload); break;
+                case VAL_NUMBER: {
+                    double d = *((double*)vimm->payload);
+                    if (fabs(d - (int)d) < 0.00001)
+                        printf("%d", (int)d);
+                    else printf("%f", d);
+                    break;
+                }
+            }
+            printf(" ");
+        }
+        printf("\n");
+    } else {
+        stopHard("Unknown builtin function %s. How did you even get this error?\n", identifier);
+    }
+}
 
 void _assertImmediateType(value_immediate vimm, enum value_kind_t type) {
     if (vimm->type != type) {
@@ -75,8 +106,6 @@ value_immediate _evalExpr(ast_node n) {
     return vimm;
 }
 
-void _visitAst(ast_node);
-
 int visitAst() {
     _visitAst(rootNode);
     return 0;
@@ -108,9 +137,13 @@ void _visitDeclaration(ast_node n) {
 void _visitFunctionCall(ast_node n) {
     printf("Visiting FunctionCall\n");
     ast_functioncall fcall = n->payload;
-    symbol_function symf = symtableGetFunction(fcall->identifier);
-    // with no care in the world, just execute the block gg
-    _visitAst(symf->block);
+    if (symtableIsBuiltin(fcall->identifier)) {
+        _executeBuiltin(fcall->identifier, fcall->actualParams);
+    } else {
+        symbol_function symf = symtableGetFunction(fcall->identifier);
+        // with no care in the world, just execute the block gg
+        _visitAst(symf->block);
+    }
 }
 
 void _visitAst(ast_node n) {

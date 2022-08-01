@@ -5,8 +5,18 @@
 #include <string.h>
 #include <stdlib.h>
 
+static void _declareBuiltin(char* identifier) {
+    symbol sym = malloc(sizeof(symbol_t));
+    sym->identifier = strdup(identifier);
+    sym->type = SYM_FUNCTION_BUILTIN;
+    sym->payload = NULL;
+    arr_add(symtable, sym);
+}
+
 void symtableInit() {
     symtable = arr_create();
+    // create global builtin function symbols
+    _declareBuiltin("zic");
 }
 
 void symtableDeclareVar(char* identifier) {
@@ -46,11 +56,21 @@ symbol symtableGetVar(char* identifier) {
     return NULL; // will not be called
 }
 
+int symtableIsBuiltin(char* identifier) {
+    // search for it
+    for (int i = 0; i < symtable->len; i++) {
+        symbol sym = symtable->stuff[i];
+        if (sym->type == SYM_FUNCTION_BUILTIN && strcmp(sym->identifier, identifier) == 0)
+            return 1;
+    }
+    return 0;
+}
+
 symbol_function symtableGetFunction(char* identifier) {
     // search for it
     for (int i = 0; i < symtable->len; i++) {
         symbol sym = symtable->stuff[i];
-        if (strcmp(sym->identifier, identifier) == 0)
+        if (sym->type == SYM_FUNCTION && strcmp(sym->identifier, identifier) == 0)
             return sym->payload;
     }
     stopHard("Function %s not found", identifier);

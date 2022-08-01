@@ -8,6 +8,7 @@
 typedef enum symbol_kind_t {
     SYM_FUNCTION, // symbol_function
     SYM_VARIABLE, // value_immediate
+    SYM_FUNCTION_BUILTIN, // NULL (recognized by name)
 } symbol_kind_t;
 
 typedef struct symbol_t {
@@ -25,6 +26,7 @@ void symtableInit();
 void symtableDeclareVar(char* identifier);
 void symtableDeclareFunction(char* identifier, ast_functiondef fdef);
 symbol symtableGetVar(char* identifier);
+int symtableIsBuiltin(char* identifier);
 symbol_function symtableGetFunction(char* identifier);
 
 array symtable;

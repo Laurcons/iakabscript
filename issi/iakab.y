@@ -24,7 +24,7 @@ int yyerror(char*);
 
 %type <node> assignment literal statement declaration block
 %type <node> functionDef functionCall expression expression1
-%type <arr> statements formalParamList
+%type <arr> statements formalParamList actualParamList
 
 %start st
 
@@ -65,6 +65,8 @@ statement:
 functionCall:
     HOHOH IDENTIFIER
     { $$ = createAstFunctionCall($2, arr_create()); }
+  | HOHO IDENTIFIER actualParamList HOH
+    { $$ = createAstFunctionCall($2, $3); }
     ;
 
 functionDef:
@@ -75,11 +77,18 @@ functionDef:
     ;
 
 formalParamList:
-    /* nothing */
-    { $$ = arr_create(); }
+    IDENTIFIER
+    { $$ = arr_create(); arr_add($$, $1); }
   | formalParamList IDENTIFIER
     { arr_add($1, $2); }
     ;
+
+actualParamList:
+    expression
+    { $$ = arr_create(); arr_add($$, $1); }
+  | actualParamList expression
+    { arr_add($1, $2); }
+  ;
 
 assignment:
     IDENTIFIER II literal
