@@ -45,8 +45,8 @@ void _visitFunctionCall(ast_node n) {
     dbgprintf("Visiting FunctionCall\n");
     ast_functioncall fcall = n->payload;
     array vimms = arr_create();
+    // evaluate all exprs to immediates
     for (int i = 0; i < fcall->actualParams->len; i++) {
-        // evaluate all exprs to immediates
         arr_add(
             vimms,
             evalExpr(fcall->actualParams->stuff[i])

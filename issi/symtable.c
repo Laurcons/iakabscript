@@ -49,7 +49,7 @@ symbol symtableGetVar(char* identifier) {
     // try find variable
     for (int i = 0; i < symtable->len; i++) {
         symbol sym = symtable->stuff[i];
-        if (strcmp(sym->identifier, identifier) == 0)
+        if (sym->type == SYM_VARIABLE && strcmp(sym->identifier, identifier) == 0)
             return sym;
     }
     stopHard("Variable %s not found when getting", identifier);
