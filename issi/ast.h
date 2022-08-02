@@ -5,7 +5,7 @@
 
 enum node_kind_t {
     AST_EMPTY, // NULL
-    AST_BLOCK, // ast_array
+    AST_BLOCK, // ast_block
     AST_NUM_LITERAL, // double
     AST_STR_LITERAL, // char*
     AST_NUI_LITERAL, // NULL
@@ -30,10 +30,21 @@ enum operator_kind_t {
     OP_INVERS,
 };
 
+// controls whether a block creates a stack frame or not
+enum block_isScoped {
+    BLOCK_SCOPED,
+    BLOCK_NOT_SCOPED,
+};
+
 typedef struct {
     enum node_kind_t type;
     void* payload;
 }* ast_node, ast_node_t;
+
+typedef struct {
+    enum block_isScoped scoped;
+    array statements;
+} *ast_block, ast_block_t;
 
 typedef struct {
     char* identifier;

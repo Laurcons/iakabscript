@@ -1,6 +1,9 @@
 #include "eval_expr.h"
 #include "symtable.h"
 #include "util.h"
+#include "call_stack.h"
+#include "builtins.h"
+#include "ast_visit.h"
 #include <stdlib.h>
 #include <string.h>
 
@@ -11,7 +14,7 @@ static void _assertImmediateType(value_immediate vimm, enum value_kind_t type) {
 }
 
 value_immediate evalExpr(ast_node n) {
-    value_immediate vimm;
+    value_immediate vimm = NULL;
     if (n->type == AST_NUM_LITERAL) {
         double d = *((double*)n->payload);
         vimm = vimm_createNumber(d);
@@ -28,13 +31,55 @@ value_immediate evalExpr(ast_node n) {
     }
     else if (n->type == AST_IDENTIFIER_LITERAL) {
         char* identifier = n->payload;
-        symbol sym = symtableGetVar(identifier);
-        if (sym->type != SYM_VARIABLE)
-            stopHard("Identifier %s in expression is not a variable\n", sym->type);
-        value_immediate othervimm = sym->payload;
-        vimm = vimm_copy(othervimm);
-        dbgprintf("expression AST_IDENTIFIER_LITERAL (%s)\n", sym->identifier);
+        framed_variable fvar = stack_lookup(identifier);
+        if (fvar != NULL) {
+            vimm = vimm_copy(fvar->value);
+        } else {
+            symbol sym = symtableGetVar(identifier);
+            value_immediate othervimm = sym->payload;
+            vimm = vimm_copy(othervimm);
+        }
+        dbgprintf("expression AST_IDENTIFIER_LITERAL (%s)\n", identifier);
     }
+    else if (n->type == AST_FUNCTIONCALL) {
+        ast_functioncall fcall = n->payload;
+        array vimms = arr_create();
+        // evaluate all exprs to immediates
+        for (int i = 0; i < fcall->actualParams->len; i++) {
+            arr_add(
+                vimms,
+                evalExpr(fcall->actualParams->stuff[i])
+            );
+        }
+        if (symtableIsBuiltin(fcall->identifier)) {
+            vimm = invokeBuiltin(fcall->identifier, vimms);
+        } else {
+            symbol_function symf = symtableGetFunction(fcall->identifier);
+            stack_createFrame();
+            stack_frame frame = stack_getCurrentFrame();
+            // push the variables on the stack
+            for (int i = 0; i < vimms->len; i++) {
+                value_immediate vimm = vimms->stuff[i];
+                arr_add(
+                    frame->variables,
+                    framedvar_create(
+                        symf->params->stuff[i], // the identifier
+                        vimm // the value
+                    )
+                );
+            }
+            visitAst(symf->block);
+            vimm = vimm_createNui();
+            stack_popFrame();
+        }
+        for (int i = 0; i < vimms->len; i++) {
+            value_immediate v = vimms->stuff[i];
+            vimm_free(v);
+        }
+        dbgprintf("evaluated function call to ");
+        vimm_dbgprint(vimm);
+        dbgprintf("\n");
+    }   
     else if (n->type == AST_BINARYOP) {
         ast_binaryop bop = n->payload;
         dbgprintf("Operator %d at binaryop\n", bop->operator);
@@ -75,5 +120,7 @@ value_immediate evalExpr(ast_node n) {
     } else {
         stopHard("Unknown node_kind_t %d at evalExpr\n", n->type);
     }
+    if (vimm == NULL)
+        stopHard("ISSI fault: vimm didn't get assigned when evaluating expression\n");
     return vimm;
 }

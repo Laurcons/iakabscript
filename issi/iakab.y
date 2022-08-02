@@ -3,7 +3,7 @@
 #include "issi.h"
 
 extern char* yytext;
-extern int yyin, yyline;
+extern int yyline;
 int yyerror(char*);
 %}
 
@@ -33,12 +33,12 @@ int yyerror(char*);
 
 st:
     statements
-    { rootNode = createAstBlock($1); }
+    { rootNode = createAstBlock($1, BLOCK_NOT_SCOPED); }
     ;
 
 block:
   FA PERIOD statements GATA
-  { $$ = createAstBlock($3); }
+  { $$ = createAstBlock($3, BLOCK_SCOPED); }
   ;
 
 statements:
@@ -74,7 +74,11 @@ functionDef:
     NU_HOHO_DECI IDENTIFIER IA NIMIC SI block
     { $$ = createAstFunctionDef($2, arr_create(), $6); }
   | NU_HOHO_DECI IDENTIFIER IA formalParamList SI block
-    { $$ = createAstFunctionDef($2, $4, $6); }
+    {
+      $$ = createAstFunctionDef($2, $4, $6);
+      /* override the block_scoped setting since this needs not be scoped */
+      astSetBlockScope($6, BLOCK_NOT_SCOPED);
+    }
     ;
 
 formalParamList:
@@ -132,6 +136,8 @@ expression1:
 
 expression2:
     literal
+    { $$ = $1; }
+  | functionCall
     { $$ = $1; }
   | expression2 ORI literal
     { $$ = createAstBinaryOp(OP_ORI, $1, $3); }

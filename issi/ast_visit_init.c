@@ -12,7 +12,8 @@ int initialVisitAst() {
 }
 
 static void _visitBlock(ast_node n) {
-    array arr = n->payload;
+    ast_block block = n->payload;
+    array arr = block->statements;
     for (int i = 0; i < arr->len; i++) {
         _visitAst(arr->stuff[i]);
     }

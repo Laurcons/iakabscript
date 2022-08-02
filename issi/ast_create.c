@@ -13,8 +13,11 @@ ast_node createAstEmpty() {
     return _createAstNode(AST_EMPTY, NULL);
 }
 
-ast_node createAstBlock(array arr) {
-    return _createAstNode(AST_BLOCK, arr);
+ast_node createAstBlock(array arr, enum block_isScoped scoped) {
+    ast_block block = malloc(sizeof(ast_block_t));
+    block->scoped = scoped;
+    block->statements = arr;
+    return _createAstNode(AST_BLOCK, block);
 }
 
 ast_node createAstAssignment(char* varname, ast_node expr) {
@@ -71,6 +74,11 @@ ast_node createAstBinaryOp(enum operator_kind_t op, ast_node left, ast_node righ
     bop->left = left;
     bop->right = right;
     return _createAstNode(AST_BINARYOP, bop);
+}
+
+void astSetBlockScope(ast_node node, enum block_isScoped scoped) {
+    ast_block block = node->payload;
+    block->scoped = scoped;
 }
 
 void astInit() {

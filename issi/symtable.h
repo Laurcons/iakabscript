@@ -19,7 +19,7 @@ typedef struct symbol_t {
 
 typedef struct symbol_function_t {
     ast_node block;
-    int paramCount;
+    array params; // array of char* (the identifiers)
 } *symbol_function, symbol_function_t;
 
 void symtableInit();

@@ -58,6 +58,25 @@ int vimm_equals(value_immediate first, value_immediate second) {
     }
 }
 
+void vimm_dbgprint(value_immediate vimm) {
+    switch (vimm->type) {
+        case VAL_NUI:
+            dbgprintf("<nui>");
+            break;
+        case VAL_NUMBER: {
+            double d = *((double*)vimm->payload);
+            dbgprintf("%f", d);
+            break;
+        }
+        case VAL_STRING:
+            dbgprintf("%s", (char*)vimm->payload);
+            break;
+        default: {
+            stopHard("Unknown value_kind_t %d\n", vimm->type);
+        }
+    }
+}
+
 void vimm_free(value_immediate vimm) {
     switch (vimm->type) {
         case VAL_STRING:

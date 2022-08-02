@@ -33,9 +33,25 @@ static value_immediate _zic(array params) {
     return vimm_createNui();
 }
 
+static value_immediate _zi(array params) {
+    dbgprintf("ZI CALL:\n");
+    if (params->len >= 1) {
+        value_immediate vimm = params->stuff[0];
+        if (vimm->type == VAL_STRING) {
+            printf("%s", (char*)vimm->payload);
+        }
+    }
+    // this is a limitation of the interpreter that might be fixed sometime
+    //  in the future by using a dynamic array
+    char buffer[200];
+    scanf("%200s", buffer);
+    return vimm_createString(buffer);
+}
+
 identifier_handler_pair_t builtinList[] = {
     { "zic", _zic },
-    { "0", NULL }
+    { "zi", _zi },
+    { "0", NULL },
 };
 
 // array of value_immediates

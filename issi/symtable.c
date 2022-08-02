@@ -17,6 +17,7 @@ void symtableInit() {
     symtable = arr_create();
     // create global builtin function symbols
     _declareBuiltin("zic");
+    _declareBuiltin("zi");
 }
 
 void symtableDeclareVar(char* identifier) {
@@ -40,7 +41,7 @@ void symtableDeclareFunction(char* identifier, ast_functiondef fdef) {
     sym->type = SYM_FUNCTION;
     symbol_function symf = malloc(sizeof(symbol_function_t));
     symf->block = fdef->block;
-    symf->paramCount = fdef->formalParams->len;
+    symf->params = fdef->formalParams; // assign by reference
     sym->payload = symf;
     arr_add(symtable, sym);
 }

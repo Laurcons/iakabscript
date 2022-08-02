@@ -1,12 +1,18 @@
 #include "issi.h"
 #include "iakab.tab.h"
 #include "tokens.tab.h"
+extern FILE* yyin;
 
 int main(int argc, char** argv) {
     astInit();
     symtableInit();
 
-    if (argc == 2 && strcmp(argv[1], "tok") == 0) {
+    if (argc < 2)
+        stopHard("Required file to run: issi [filename]\n");
+    
+    yyin = fopen(argv[1], "r");
+
+    if (argc == 3 && strcmp(argv[2], "tok") == 0) {
         int tok;
         while ((tok = yylex()) != 0) {
             printf("%s\n", tokentostr(tok));

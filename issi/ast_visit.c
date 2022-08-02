@@ -6,6 +6,7 @@
 #include "value_immediate.h"
 #include "eval_expr.h"
 #include "builtins.h"
+#include "call_stack.h"
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
@@ -19,26 +20,52 @@ int visitAst() {
 
 void _visitBlock(ast_node n) {
     dbgprintf("Visiting Block\n");
-    array arr = n->payload;
+    ast_block block = n->payload;
+    if (block->scoped == BLOCK_SCOPED)
+        stack_createFrame();
+    array arr = block->statements;
     for (int i = 0; i < arr->len; i++)
         _visitAst(arr->stuff[i]);
+    if (block->scoped == BLOCK_SCOPED)
+        stack_popFrame();
 }
 
 void _visitAssignment(ast_node n) {
     dbgprintf("Visiting Assignment\n");
     ast_assignment asn = n->payload;
-    symbol sym = symtableGetVar(asn->identifier);
-    vimm_free(sym->payload);
-    sym->payload = evalExpr(asn->expr);
+    value_immediate result = evalExpr(asn->expr);
+    framed_variable fvar = stack_lookup(asn->identifier);
+    if (fvar != NULL) {
+        vimm_free(fvar->value);
+        fvar->value = vimm_copy(result);
+    } else {
+        symbol sym = symtableGetVar(asn->identifier);
+        vimm_free(sym->payload);
+        sym->payload = vimm_copy(result);
+    }
+    vimm_free(result);
 }
 
 void _visitDeclaration(ast_node n) {
     dbgprintf("Visiting Declaration\n");
     ast_declaration decl = n->payload;
-    symtableDeclareVar(decl->identifier);
-    symbol sym = symtableGetVar(decl->identifier);
-    vimm_free(sym->payload); // it is initialized with NUI in declareVar
-    sym->payload = evalExpr(decl->expr);
+    value_immediate result = evalExpr(decl->expr);
+    // declare in stack or globally
+    stack_frame frame = stack_getCurrentFrame();
+    if (frame != NULL) {
+        arr_add(frame->variables,
+            framedvar_create(
+                decl->identifier,
+                result
+            )
+        );
+    } else {
+        symtableDeclareVar(decl->identifier);
+        symbol sym = symtableGetVar(decl->identifier);
+        vimm_free(sym->payload); // it is initialized with NUI in declareVar
+        sym->payload = vimm_copy(result);
+    }
+    vimm_free(result);
 }
 
 void _visitFunctionCall(ast_node n) {
@@ -60,8 +87,21 @@ void _visitFunctionCall(ast_node n) {
         }
     } else {
         symbol_function symf = symtableGetFunction(fcall->identifier);
-        // with no care in the world, just execute the block gg
+        stack_createFrame();
+        stack_frame frame = stack_getCurrentFrame();
+        // push the variables on the stack
+        for (int i = 0; i < vimms->len; i++) {
+            value_immediate vimm = vimms->stuff[i];
+            arr_add(
+                frame->variables,
+                framedvar_create(
+                    symf->params->stuff[i], // the identifier
+                    vimm // the value
+                )
+            );
+        }
         _visitAst(symf->block);
+        stack_popFrame();
     }
 }
 
