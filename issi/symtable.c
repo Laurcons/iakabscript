@@ -5,6 +5,8 @@
 #include <string.h>
 #include <stdlib.h>
 
+array symtable = NULL;
+
 static void _declareBuiltin(char* identifier) {
     symbol sym = malloc(sizeof(symbol_t));
     sym->identifier = strdup(identifier);

@@ -74,6 +74,6 @@ typedef struct {
     ast_node right;
 } *ast_unaryop, ast_unaryop_t;
 
-ast_node rootNode;
+extern ast_node rootNode;
 
 #endif

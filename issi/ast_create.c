@@ -1,6 +1,8 @@
 #include "ast_create.h"
 #include <string.h>
 
+ast_node rootNode = NULL;
+
 // internal
 ast_node _createAstNode(enum node_kind_t type, void* payload) {
     ast_node n = malloc(sizeof(ast_node_t));

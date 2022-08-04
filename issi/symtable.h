@@ -29,6 +29,6 @@ symbol symtableGetVar(char* identifier);
 int symtableIsBuiltin(char* identifier);
 symbol_function symtableGetFunction(char* identifier);
 
-array symtable;
+extern array symtable;
 
 #endif

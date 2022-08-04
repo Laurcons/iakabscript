@@ -41,6 +41,8 @@ void framedvar_free(framed_variable fvar) {
 
 framed_variable stack_lookup(char* identifier) {
     stack_frame curr = currentFrame;
+    if (curr == NULL)
+        return NULL;
     for (int i = 0; i < curr->variables->len; i++) {
         framed_variable fvar = curr->variables->stuff[i];
         if (strcmp(fvar->identifier, identifier) == 0)
