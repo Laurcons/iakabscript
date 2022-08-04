@@ -5,11 +5,12 @@
 # must be run AFTER bison but BEFORE gcc
 
 switchCases=$(cat iakab.tab.h |
-grep -Ezo "enum yytokentype[^}]+}" |
+grep -Pzo "[^f] enum yytokentype[^}]+" |
+sed -E 's/\00/\n/g' |
 tail -n +3 |
-head -n -1 |
-sed -E 's/ |,//g' |
-sed -E 's/([A-Z_]+)=([0-9]+)/case \2: return "\1";/'
+sed -E 's#/\*(.*)\*/##g' |
+sed -E 's/,//g' |
+sed -E 's/([A-Za-z_]+) ?= ?(-?[0-9]+)/case \2: return "\1";/'
 )
 
 cat > tokens.tab.h <<-END
