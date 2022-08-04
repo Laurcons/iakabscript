@@ -65,6 +65,9 @@ void _visitDeclaration(ast_node n) {
         vimm_free(sym->payload); // it is initialized with NUI in declareVar
         sym->payload = vimm_copy(result);
     }
+    dbgprintf("Assigned value ");
+    vimm_dbgprint(result);
+    dbgprintf(" to %s\n", decl->identifier);
     vimm_free(result);
 }
 
@@ -107,7 +110,7 @@ void _visitFunctionCall(ast_node n) {
 
 void _visitAst(ast_node n) {
     switch (n->type) {
-        case AST_EMPTY: /* nothing */; break;
+        case AST_EMPTY: break;
         case AST_BLOCK: _visitBlock(n); break;
         case AST_ASSIGNMENT: _visitAssignment(n); break;
         case AST_DECLARATION: _visitDeclaration(n); break;

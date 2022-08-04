@@ -69,7 +69,7 @@ void vimm_dbgprint(value_immediate vimm) {
             break;
         }
         case VAL_STRING:
-            dbgprintf("%s", (char*)vimm->payload);
+            dbgprintf("\"%s\"", (char*)vimm->payload);
             break;
         default: {
             stopHard("Unknown value_kind_t %d\n", vimm->type);

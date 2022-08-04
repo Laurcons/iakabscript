@@ -43,6 +43,7 @@ value_immediate evalExpr(ast_node n) {
     }
     else if (n->type == AST_FUNCTIONCALL) {
         ast_functioncall fcall = n->payload;
+        dbgprintf("evaluating function call expression to %s\n", fcall->identifier);
         array vimms = arr_create();
         // evaluate all exprs to immediates
         for (int i = 0; i < fcall->actualParams->len; i++) {
