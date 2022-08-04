@@ -15,14 +15,14 @@ static void _declareBuiltin(char* identifier) {
     arr_add(symtable, sym);
 }
 
-void symtableInit() {
+void symt_init() {
     symtable = arr_create();
     // create global builtin function symbols
     _declareBuiltin("zic");
     _declareBuiltin("zi");
 }
 
-void symtableDeclareVar(char* identifier) {
+void symt_declareVar(char* identifier) {
     // try find variable
     for (int i = 0; i < symtable->len; i++) {
         symbol sym = symtable->stuff[i];
@@ -37,7 +37,7 @@ void symtableDeclareVar(char* identifier) {
     arr_add(symtable, sym);
 }
 
-void symtableDeclareFunction(char* identifier, ast_functiondef fdef) {
+void symt_declareFunction(char* identifier, ast_functiondef fdef) {
     symbol sym = malloc(sizeof(symbol_t));
     sym->identifier = identifier;
     sym->type = SYM_FUNCTION;
@@ -48,7 +48,7 @@ void symtableDeclareFunction(char* identifier, ast_functiondef fdef) {
     arr_add(symtable, sym);
 }
 
-symbol symtableGetVar(char* identifier) {
+symbol symt_getVar(char* identifier) {
     // try find variable
     for (int i = 0; i < symtable->len; i++) {
         symbol sym = symtable->stuff[i];
@@ -59,7 +59,7 @@ symbol symtableGetVar(char* identifier) {
     return NULL; // will not be called
 }
 
-int symtableIsBuiltin(char* identifier) {
+int symt_isBuiltin(char* identifier) {
     // search for it
     for (int i = 0; i < symtable->len; i++) {
         symbol sym = symtable->stuff[i];
@@ -69,7 +69,7 @@ int symtableIsBuiltin(char* identifier) {
     return 0;
 }
 
-symbol_function symtableGetFunction(char* identifier) {
+symbol_function symt_getFunction(char* identifier) {
     // search for it
     for (int i = 0; i < symtable->len; i++) {
         symbol sym = symtable->stuff[i];

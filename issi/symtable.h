@@ -22,12 +22,12 @@ typedef struct symbol_function_t {
     array params; // array of char* (the identifiers)
 } *symbol_function, symbol_function_t;
 
-void symtableInit();
-void symtableDeclareVar(char* identifier);
-void symtableDeclareFunction(char* identifier, ast_functiondef fdef);
-symbol symtableGetVar(char* identifier);
-int symtableIsBuiltin(char* identifier);
-symbol_function symtableGetFunction(char* identifier);
+void symt_init();
+void symt_declareVar(char* identifier);
+void symt_declareFunction(char* identifier, ast_functiondef fdef);
+symbol symt_getVar(char* identifier);
+int symt_isBuiltin(char* identifier);
+symbol_function symt_getFunction(char* identifier);
 
 extern array symtable;
 

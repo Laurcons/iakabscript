@@ -39,7 +39,7 @@ void _visitAssignment(ast_node n) {
         vimm_free(fvar->value);
         fvar->value = vimm_copy(result);
     } else {
-        symbol sym = symtableGetVar(asn->identifier);
+        symbol sym = symt_getVar(asn->identifier);
         vimm_free(sym->payload);
         sym->payload = vimm_copy(result);
     }
@@ -60,8 +60,8 @@ void _visitDeclaration(ast_node n) {
             )
         );
     } else {
-        symtableDeclareVar(decl->identifier);
-        symbol sym = symtableGetVar(decl->identifier);
+        symt_declareVar(decl->identifier);
+        symbol sym = symt_getVar(decl->identifier);
         vimm_free(sym->payload); // it is initialized with NUI in declareVar
         sym->payload = vimm_copy(result);
     }
@@ -82,14 +82,14 @@ void _visitFunctionCall(ast_node n) {
             evalExpr(fcall->actualParams->stuff[i])
         );
     }
-    if (symtableIsBuiltin(fcall->identifier)) {
+    if (symt_isBuiltin(fcall->identifier)) {
         invokeBuiltin(fcall->identifier, vimms);
         for (int i = 0; i < vimms->len; i++) {
             value_immediate vimm = vimms->stuff[i];
             vimm_free(vimm);
         }
     } else {
-        symbol_function symf = symtableGetFunction(fcall->identifier);
+        symbol_function symf = symt_getFunction(fcall->identifier);
         stack_createFrame();
         stack_frame frame = stack_getCurrentFrame();
         // push the variables on the stack

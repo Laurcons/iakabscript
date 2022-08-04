@@ -22,7 +22,7 @@ static void _visitBlock(ast_node n) {
 static void _visitFunctionDef(ast_node n) {
     dbgprintf("Visiting FunctionDef\n");
     ast_functiondef fdef = n->payload;
-    symtableDeclareFunction(fdef->identifier, fdef);
+    symt_declareFunction(fdef->identifier, fdef);
     dbgprintf("declared function %s with %d parameters\n",
         fdef->identifier,
         fdef->formalParams->len

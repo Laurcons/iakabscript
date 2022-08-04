@@ -5,7 +5,7 @@ extern FILE* yyin;
 
 int main(int argc, char** argv) {
     astInit();
-    symtableInit();
+    symt_init();
 
     if (argc < 2)
         stopHard("Required file to run: issi [filename]\n");

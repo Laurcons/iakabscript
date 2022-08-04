@@ -35,7 +35,7 @@ value_immediate evalExpr(ast_node n) {
         if (fvar != NULL) {
             vimm = vimm_copy(fvar->value);
         } else {
-            symbol sym = symtableGetVar(identifier);
+            symbol sym = symt_getVar(identifier);
             value_immediate othervimm = sym->payload;
             vimm = vimm_copy(othervimm);
         }
@@ -52,10 +52,10 @@ value_immediate evalExpr(ast_node n) {
                 evalExpr(fcall->actualParams->stuff[i])
             );
         }
-        if (symtableIsBuiltin(fcall->identifier)) {
+        if (symt_isBuiltin(fcall->identifier)) {
             vimm = invokeBuiltin(fcall->identifier, vimms);
         } else {
-            symbol_function symf = symtableGetFunction(fcall->identifier);
+            symbol_function symf = symt_getFunction(fcall->identifier);
             stack_createFrame();
             stack_frame frame = stack_getCurrentFrame();
             // push the variables on the stack
