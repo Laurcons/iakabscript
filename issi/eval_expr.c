@@ -53,7 +53,7 @@ value_immediate evalExpr(ast_node n) {
             );
         }
         if (symt_isBuiltin(fcall->identifier)) {
-            vimm = invokeBuiltin(fcall->identifier, vimms);
+            vimm = builtin_invoke(fcall->identifier, vimms);
         } else {
             symbol_function symf = symt_getFunction(fcall->identifier);
             stack_createFrame();

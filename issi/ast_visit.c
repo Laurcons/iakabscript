@@ -83,7 +83,7 @@ void _visitFunctionCall(ast_node n) {
         );
     }
     if (symt_isBuiltin(fcall->identifier)) {
-        invokeBuiltin(fcall->identifier, vimms);
+        builtin_invoke(fcall->identifier, vimms);
         for (int i = 0; i < vimms->len; i++) {
             value_immediate vimm = vimms->stuff[i];
             vimm_free(vimm);

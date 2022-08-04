@@ -4,6 +4,6 @@
 #include "array.h"
 #include "value_immediate.h"
 
-value_immediate invokeBuiltin(char* identifier, array params);
+value_immediate builtin_invoke(char* identifier, array params);
 
 #endif

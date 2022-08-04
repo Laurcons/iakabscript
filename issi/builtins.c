@@ -55,7 +55,7 @@ identifier_handler_pair_t builtinList[] = {
 };
 
 // array of value_immediates
-value_immediate invokeBuiltin(char* identifier, array params) {
+value_immediate builtin_invoke(char* identifier, array params) {
     dbgprintf("Builtin call to %s with %d params\n", identifier, params->len);
     int i = 0;
     while (builtinList[i].identifier[0] != '0') {
