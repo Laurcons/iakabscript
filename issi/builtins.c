@@ -5,10 +5,15 @@
 #include <math.h>
 #include <string.h>
 
-typedef struct identifier_handler_pair_t {
-    char* identifier;
-    value_immediate (*runner)(array);
-} identifier_handler_pair_t;
+static value_immediate _zic(array);
+static value_immediate _zi(array);
+static value_immediate _fanumar(array);
+identifier_handler_pair_t builtinList[] = {
+    { "zic", _zic },
+    { "zi", _zi },
+    { "fanumar", _fanumar },
+    { "0", NULL },
+};
 
 static value_immediate _zic(array params) {
     dbgprintf("ZIC CALL: ");
@@ -48,11 +53,26 @@ static value_immediate _zi(array params) {
     return vimm_createString(buffer);
 }
 
-identifier_handler_pair_t builtinList[] = {
-    { "zic", _zic },
-    { "zi", _zi },
-    { "0", NULL },
-};
+static value_immediate _fanumar(array params) {
+    // TODO: support non-Human formatted numbers
+    //int doariakab = 0;
+    if (params->len == 2) {
+        value_immediate vimm = params->stuff[1];
+        if (vimm->type == VAL_STRING && strcmp(vimm->payload, "doariakab") == 0) {
+            //doariakab = 1;
+            dbgprintf("doariakab mode activated for fanumar call\n");
+        }
+    }
+    value_immediate first = params->stuff[0];
+    if (first->type != VAL_STRING)
+        stopHard("Parameter to fanumar was not a string");
+    // check that this string does not contains characters that appear in number literals
+    if (strpbrk(first->payload, "nbgez") != NULL)
+        stopHard("The current ISSI version's implementation of the 'fanumar' builtin function does not support non-Human formatted numbers");
+    double result;
+    sscanf((char*)first->payload, "%lf", &result);
+    return vimm_createNumber(result);
+}
 
 // array of value_immediates
 value_immediate builtin_invoke(char* identifier, array params) {
@@ -64,6 +84,9 @@ value_immediate builtin_invoke(char* identifier, array params) {
         }
         i++;
     }
+    // this error generally shouldn't be reached because before hitting this code,
+    //  ISSI will look in the symbol table and will throw an error there (since the
+    //  builtin does not appear there)
     stopHard("Unknown builtin function %s. How did you even get this error?\n", identifier);
     return NULL;
 }

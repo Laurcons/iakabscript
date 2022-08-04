@@ -2,6 +2,7 @@
 #include "util.h"
 #include "array.h"
 #include "value_immediate.h"
+#include "builtins.h"
 #include <string.h>
 #include <stdlib.h>
 
@@ -18,8 +19,11 @@ static void _declareBuiltin(char* identifier) {
 void symt_init() {
     symtable = arr_create();
     // create global builtin function symbols
-    _declareBuiltin("zic");
-    _declareBuiltin("zi");
+    int i = 0;
+    while (builtinList[i].runner != NULL) {
+        _declareBuiltin(builtinList[i].identifier);
+        i++;
+    }
 }
 
 void symt_declareVar(char* identifier) {
