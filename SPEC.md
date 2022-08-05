@@ -5,6 +5,9 @@ This is the official language specification for IakabScript (IS).
 ## Version
 This spec is still a draft, and a work in progress. This spec will get version number v1.0 once the official interpreter is out. Until then, feel free to contribute with any suggestions or code examples, by contacting me.
 
+## Implementation
+This specification is implemented by the IakabScript Standard Interpreter (ISSI). You can also use this specification to build your own interpreter for IakabScript.
+
 ## Profanity warning
 Please note that, while the language itself doesn't use profanity in its syntax, profanity is highly recommended when working with IS. The code examples here make extensive use of profanity.
 
@@ -84,7 +87,7 @@ Arrays in IS are associative arrays. They work similarly to PHP arrays: they con
 
 An array literal has the form:
 ```
-multe [key] ii [value] cu [key] ii [value] si atat
+multe [key] ii [value] si [key] ii [value] si atat
 ```
 You can have as many keys and values as you want. Please note that, while [line splitting](#line-splitting) is permitted, you should think: would Ed split his lines? That's what I thought.
 
@@ -93,6 +96,7 @@ An empty array literal has the form:
 gol
 <3 alternative:
 golcacapuluilie
+<3 or any other non-space characters after "gol"
 ```
 
 Arrays have special methods that are used to mutate them. Calling these methods uses a modified [function call](#function-calls) syntax:
@@ -114,7 +118,7 @@ Identifiers are sequences of characters that identify things in your program, su
 
 **NOTE:** The interpreter you use determines whether it accepts Unicode source code or not. If not, the emoji notation is not possible.
 
-You cannot have an identifier that starts with `e`, `g`, `n` or `b`, nor any reserved keyword.
+An identifier is any sequence of characters that is not a [number literal](#number-literals) or a reserved keyword. It also cannot start with `gol` since this is an empty array literal.
 
 Valid identifiers:
 * `hohooo`
@@ -181,10 +185,10 @@ Call a function using the following syntax:
 * With parameters: `hoho [functionName] [params] hoh`
 * Without parameters: `hohoh [functionName]`
 
-Separate parameters with spaces.
+Separate parameters with `si`.
 
 ```
-hoho uatafac pula pizda oho
+hoho uatafac pula si pizda oho
 
 hohoh cplm
 ```
@@ -229,21 +233,21 @@ hoho zic coie hoh
 ## Operators
 The following table lists all IS operators, in order of precedence (topmost have least priority). Equal priority operators are evaluated LTR. An `X` marks where the operands would be placed.
 
-Keyword | Category | Name | Priority | Observations
---------|----------|------|----------|-------------
+Keyword | Category | Name | Priority 
+--------|----------|------|----------
 X `egal` X | equality | equal | 1
 X `nuegal` X | equality | not equal | 1
 `invers` X | boolean | logical negation | 2
-X `sau` X | boolean | logical OR | 2
-X `deodata cu` X | boolean | logical AND | 2 | `si` is already a reserved keyword
-X `maimare` X | comparison | more than | 3
-X `maimic` X | comparison | less than | 3
-X `plus` X | arithmetic | addition | 4
-X `minus` X | arithmetic | subtraction | 4
-X `ori` X | arithmetic | multiplication | 5
-X `impartit la` X | arithmetic | division | 5
-X `modulo` X | arithmetic | modulo | 5
-`minus` X | arithmetic | negation | 6
+X `sau` X | boolean | logical OR | 3
+X `deodatacu` X | boolean | logical AND | 4
+X `maimare` X | comparison | more than | 5
+X `maimic` X | comparison | less than | 5
+X `plus` X | arithmetic | addition | 6
+X `minus` X | arithmetic | subtraction | 6
+X `ori` X | arithmetic | multiplication | 7
+X `impartitla` X | arithmetic | division | 7
+X `modulo` X | arithmetic | modulo | 7
+`minus` X | arithmetic | negation | 8
 
 There are no parantheses in IS. If they were, Ed wouldn't use them. To simulate overriding priority, just use a sequence of variable assignments.
 
@@ -317,65 +321,4 @@ This only converts to the Human format, because what Human other than Ed would u
 
 ```
 hoho zic hoho fatext gggg oho oho <3 prints 4
-```
-
-## Code examples
-
-### Is prime?
-Task: define a function that returns 1 if its parameter is prime, and 0 otherwise.
-
-```
-nu hoho deci prim ia pula si fa
-    nu deci i ii g <3 one
-    nu deci p ii b <3 zero
-    <3 if it's 1 then return 0
-    daca pula egal g atunci fa
-        iesi b
-    gata
-
-    <3 while i <= pula
-    cat timp invers i maimare pula fa
-        daca pula modulo i egal b atunci fa
-            p ii p plus g
-        gata
-
-        i ii i plus g
-    gata
-    iesi p egal gg <3 if equal to 2, it's prime
-gata
-
-nu deci v ii nui
-v ii hoho prim gg hoh
-hoho zic v hoh <3 2 is prime
-v ii hoho prim ggg hoh
-hoho zic v hoh <3 3 is prime
-v ii hoho prim gggg hoh
-hoho zic v hoh <3 4 is NOT prime
-```
-
-### Counting
-Task: write a program that creates an array with numbers from 100 to 1, then prints each one, in reverse order (from 1 to 100).
-
-```
-nu deci sir ii gol
-
-<3 generate the array
-nu deci i ii ezz si poz ii b
-cat timp i maimare b fa
-
-    hoho pe sir baga poz i hoh <3 push i on position poz
-
-    b ii b plus g
-    i ii i minus g
-gata
-
-<3 print the array
-poz ii hohoh pe sir catdelung minus g <3 last position (count - 1)
-cat timp invers poz maimic b fa <3 poz >= 0
-
-    nu deci ilie ii hoho pe sir dela poz hoh
-    hoho zi ilie hoh
-
-gata
-
 ```
