@@ -3,7 +3,10 @@
 This is the official language specification for IakabScript (IS).
 
 ## Version
-This spec is still a draft, and a work in progress. This spec will get version number v1.0 once the official interpreter is out. Until then, feel free to contribute with any suggestions or code examples.
+This spec is still a draft, and a work in progress. This spec will get version number v1.0 once the official interpreter is out. Until then, feel free to contribute with any suggestions or code examples, by contacting me.
+
+## Implementation
+This specification is implemented by the IakabScript Standard Interpreter (ISSI). You can also use this specification to build your own interpreter for IakabScript.
 
 ## Profanity warning
 Please note that, while the language itself doesn't use profanity in its syntax, profanity is highly recommended when working with IS. The code examples here make extensive use of profanity.
@@ -12,12 +15,44 @@ Please note that, while the language itself doesn't use profanity in its syntax,
 
 All statements in IS are sentences. Ed never touches the Shift key, and instead either talks in all lowercase, or in all uppercase if shouting. Therefore, all sentences in IS are case-insensitive. This being said, it's your responsibility to make the source code's casing interesting.
 
-A sentence is always followed by a DOT `.` or a NEWLINE `<NL>`. This means that sentences **cannot** be split on multiple lines.
+A sentence is always followed by a DOT `.` or a NL `<NEWLINE>`.
 
 ```
 Nu deci ilie ii gggggggg
 Hoho dutedracu cu ilie oho. Hoho zic "duten pula" hoh
 ```
+
+### Line splitting
+You can split a sentence onto multiple lines by adding `stai` at the end of the lines.
+```
+nu deci stai
+ilie ii ggggggggggggg
+```
+
+All the text after `stai`, until the end of the line, will be ignored, so it is recommended that you harrass the reader of your code using your `stai` statements. Your interpreter might get offended as well... that is your own responsibility to handle.
+```
+nu deci stai otara in pula mea ce te grabesti asa
+capuluilie ii stai sa imi amintesc
+gol <33333333333333
+```
+
+You can have as many `a`'s in your `stai` as you need to get your point across.
+```
+nu hoho deci staaaaaaaaaaaaaaaaai ce se intampla aici
+```
+
+Please note that `stai` statements, although similar to comments, are functionally distinct.
+
+## Comments
+You can write a comment at any end of a line by appending `<3`. The rest of the line will be ignored.
+
+```
+Nu deci ilie ii nbbnbn <3 dal drecu
+<3 ce pula mea se intampla aici
+```
+Under the hood, a comment is treated as a DOT/NL.
+
+Please note that comments, although similar to `stai` statements, are functionally distinct.
 
 ## Number literals
 Ed doesn't type numbers in chat, and when he does, he surely hates doing it, so IS uses `gg`, `ez` and `nb` to represent number literals.
@@ -47,11 +82,33 @@ nu deci pula ii nui
 ```
 
 ## Arrays
-TODO: define a method for how arrays would work.
 
-They would accept strings as indexes and _any_ object as values so they could realistically simulate objects, which would be really powerful.
+Arrays in IS are associative arrays. They work similarly to PHP arrays: they consist of key-value pairs, where the key must be a number or string, and the value can be a string, number, array, or `nui`.
 
-Mutating them would be done using either standard custom operators, or some utility functions defined in the SL.
+An array literal has the form:
+```
+multe [key] ii [value] si [key] ii [value] si atat
+```
+You can have as many keys and values as you want. Please note that, while [line splitting](#line-splitting) is permitted, you should think: would Ed split his lines? That's what I thought.
+
+An empty array literal has the form:
+```
+gol
+<3 alternative:
+golcacapuluilie
+<3 or any other non-space characters after "gol"
+```
+
+Arrays have special methods that are used to mutate them. Calling these methods uses a modified [function call](#function-calls) syntax:
+```
+hoho pe [array] [method] [params] hoh
+hohoh pe [array] [method]
+```
+Available methods:
+* `baga [key] [elem]`: Inserts `elem` under the key `key`. If the key exists, the elem will be overwritten.
+* `dela [key]`: Returns the element with the key `key`.
+* `afar [key]`: Removes the element with the key `key`. Also returns it.
+* `catdelung`: Returns the length of the array.
 
 ## Booleans
 There are no booleans in IS. When evaluating a value as a condition, only a number value of zero is considered false. Everything else (including all strings) are true.
@@ -61,7 +118,7 @@ Identifiers are sequences of characters that identify things in your program, su
 
 **NOTE:** The interpreter you use determines whether it accepts Unicode source code or not. If not, the emoji notation is not possible.
 
-You cannot have an identifier that starts with `e`, `g`, `n` or `b`.
+An identifier is any sequence of characters that is not a [number literal](#number-literals) or a reserved keyword. It also cannot start with `gol` since this is an empty array literal.
 
 Valid identifiers:
 * `hohooo`
@@ -72,19 +129,12 @@ Invalid identifiers:
 * `cacat🥰🥰🥰`
 * `nu`
 * `busimiaicoiele`
+* `stai` or `deci` or `hoho` etc.
 
-## Comments
-You can write a comment at any end of a line by appending `<3`. The rest of the line will be ignored.
-
-```
-Nu deci ilie ii nbbnbn <3 dal drecu
-<3 ce pula mea se intampla aici
-```
-
-## Variable declarations (scalars)
+## Variable declarations
 Before you can use any variable, you must declare it inside its scope, and before it is used. I'm sure Ed doesn't like declaring his variables in advance, but sometimes he has to make compromises.
 
-Variables in IS don't have types: they are dynamic, and can hold any number or string type.
+Variables in IS don't have types: they are dynamic, and can hold any type.
 
 Declare a variable using `nu deci [identifier] ii [value]`.
 
@@ -93,21 +143,21 @@ nu deci ilie ii gggggggggggg
 nu deci bubu ii nbnbnbbbnbnnnnbb
 ```
 
-You can write multiple declarations on a line by separating them with `si`. This is not recommended, as lines can get long, but when has this stopped Ed?
+You can write multiple declarations on a line by separating them with `si`. This is VERY recommended, as lines can get long, and is exactly what Ed would do.
 
 ```
 nu deci ilie ii gggggggg si bubu ii nbnb. nu deci iacobu ii nbbbbbb
 ```
 
 ## Functions
-Functions can only be declared in the global scope, using the `hoho` keyword. They follow this general structure:
+Functions can only be declared in the global scope, using the `nu hoho deci` keyword. They follow this general structure:
 ```
 nu hoho deci [function_name] ia [parameters] si fa
 <3 function code here
 gata
 ```
 
-`function_name` needs to be a valid identifier. `parameters` is a list of formal parameter names, separated by `cu`. If the function takes no parameters, use `nimic` instead.
+`function_name` needs to be a valid identifier. `parameters` is a list of formal parameter names. If the function takes no parameters, use `nimic` instead.
 
 ```
 <3 valid syntax
@@ -116,7 +166,7 @@ nu hoho deci cplm ia nimic si fa
 gata
 
 <3 or
-nu hoho deci uatafac ia pula cu pizda cu dracu si fa
+nu hoho deci uatafac ia pula pizda dracu si fa
     <33333333
 gata
 ```
@@ -135,10 +185,10 @@ Call a function using the following syntax:
 * With parameters: `hoho [functionName] [params] hoh`
 * Without parameters: `hohoh [functionName]`
 
-Separate parameters using the `cu` keyword.
+Separate parameters with `si`.
 
 ```
-hoho uatafac pula cu pizda oho
+hoho uatafac pula si pizda oho
 
 hohoh cplm
 ```
@@ -173,7 +223,7 @@ To read from the console, use the built-in function `zi`. It will read a string 
 
 ```
 nu deci pula ii gg si pizda ii nbnb
-hoho zic "dute dracu" cu pula cu pizda oho
+hoho zic "dute dracu" pula pizda oho
 ```
 ```
 nu deci coie ii hohoh zi
@@ -183,28 +233,32 @@ hoho zic coie hoh
 ## Operators
 The following table lists all IS operators, in order of precedence (topmost have least priority). Equal priority operators are evaluated LTR. An `X` marks where the operands would be placed.
 
-Keyword | Category | Name | Priority | Observations
---------|----------|------|----------|-------------
+Keyword | Category | Name | Priority 
+--------|----------|------|----------
 X `egal` X | equality | equal | 1
-X `inegal` X | equality | not equal | 1
+X `nuegal` X | equality | not equal | 1
 `invers` X | boolean | logical negation | 2
-X `sau` X | boolean | logical OR | 2
-X `deodatacu` X | boolean | logical AND | 2 | `si` is already a reserved keyword
-X `maimare` X | comparison | more than | 3
-X `maimic` X | comparison | less than | 3
-X `plus` X | arithmetic | addition | 4
-X `minus` X | arithmetic | subtraction | 4
-`minus` X | arithmetic | negation | 4
-X `ori` X | arithmetic | multiplication | 4
-X `impartit la` X | arithmetic | division | 4
-X `modulo` X | arithmetic | modulo | 4
+X `sau` X | boolean | logical OR | 3
+X `deodatacu` X | boolean | logical AND | 4
+X `maimare` X | comparison | more than | 5
+X `maimic` X | comparison | less than | 5
+X `plus` X | arithmetic | addition | 6
+X `minus` X | arithmetic | subtraction | 6
+X `ori` X | arithmetic | multiplication | 7
+X `impartitla` X | arithmetic | division | 7
+X `modulo` X | arithmetic | modulo | 7
+`minus` X | arithmetic | negation | 8
 
 There are no parantheses in IS. If they were, Ed wouldn't use them. To simulate overriding priority, just use a sequence of variable assignments.
+
+Boolean operators will return 0 for false and 1 for true.
+
+Mentions:
 
 * Comparison and equality operators work with strings by comparing lexicographically.
 * The PLUS operator works with strings by returning a concatenated string.
 
-TODO: extend functionality with arrays?
+TODO: extend functionality with arrays (will be done once progress on ISSI reaches this point)
 
 ## Assignment
 Assign an expression to a variable using the `ii` keyword.
@@ -267,38 +321,4 @@ This only converts to the Human format, because what Human other than Ed would u
 
 ```
 hoho zic hoho fatext gggg oho oho <3 prints 4
-```
-
-## Code examples
-
-### Is prime?
-Task: define a function that returns 1 if its parameter is prime, and 0 otherwise.
-
-```
-nu hoho deci prim ia pula si fa
-    nu deci i ii g <3 one
-    nu deci p ii b <3 zero
-    <3 if it's 1 then return 0
-    daca pula egal g atunci fa
-        iesi b
-    gata
-
-    <3 while i <= pula
-    cat timp invers i maimare pula fa
-        daca pula modulo i egal b atunci fa
-            p ii p plus g
-        gata
-
-        i ii i plus g
-    gata
-    iesi p egal gg <3 if equal to 2, it's prime
-gata
-
-nu deci v ii nui
-v ii hoho prim cu gg
-hoho zic cu v <3 2 is prime
-v ii hoho prim cu ggg
-hoho zic cu v <3 3 is prime
-v ii hoho prim cu gggg
-hoho zic cu v <3 4 is NOT prime
 ```
