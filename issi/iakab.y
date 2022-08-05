@@ -26,8 +26,17 @@ int yyerror(char*);
 %type <node> assignment literal statement declaration scopedBlock unscopedBlock
 %type <node> functionDef functionCall functionReturn
 %type <node> flowControl daca catTimp
-%type <node> expression expression1 expression2
+%type <node> expression
 %type <arr> statements formalParamList actualParamList
+
+%left EGAL NUEGAL
+%left INVERS
+%left SAU
+%left DEODATACU
+%left MAIMIC MAIMARE
+%left PLUS MINUS
+%left ORI IMPARTITLA MODULO
+%left UNARY_MINUS
 
 %start st
 
@@ -111,8 +120,8 @@ formalParamList:
 actualParamList:
     expression
     { $$ = arr_create(); arr_add($$, $1); }
-  | actualParamList expression
-    { arr_add($1, $2); }
+  | actualParamList SI expression
+    { arr_add($1, $3); }
   ;
 
 assignment:
@@ -143,35 +152,26 @@ literal:
     { $$ = ast_createIdentifierLiteral($1); }
     ;
 
+ /* the precedence of these is declared above, in the %left statements */
 expression:
-    expression1
-    { $$ = $1; }
-  | expression EGAL expression1
+    expression EGAL expression
     { $$ = ast_createBinaryOp(OP_EGAL, $1, $3); }
-  | expression NUEGAL expression1
+  | expression NUEGAL expression
     { $$ = ast_createBinaryOp(OP_NUEGAL, $1, $3); }
-    ;
-
-expression1:
-    expression2
-    { $$ = $1; }
-  | expression1 PLUS expression2
+  | expression PLUS expression
     { $$ = ast_createBinaryOp(OP_PLUS, $1, $3); }
-  | expression1 MINUS expression2
+  | expression MINUS expression
     { $$ = ast_createBinaryOp(OP_MINUS, $1, $3); }
-  | MINUS expression2
+  | expression ORI literal
+    { $$ = ast_createBinaryOp(OP_ORI, $1, $3); }
+  | expression IMPARTITLA literal
+    { $$ = ast_createBinaryOp(OP_IMPARTIT_LA, $1, $3); }
+  | MINUS expression %prec UNARY_MINUS
     { $$ = ast_createUnaryOp(OP_MINUS, $2); }
-    ;
-
-expression2:
-    literal
+  | literal
     { $$ = $1; }
   | functionCall
     { $$ = $1; }
-  | expression2 ORI literal
-    { $$ = ast_createBinaryOp(OP_ORI, $1, $3); }
-  | expression2 IMPARTITLA literal
-    { $$ = ast_createBinaryOp(OP_IMPARTIT_LA, $1, $3); }
     ;
 
 %%
