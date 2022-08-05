@@ -5,23 +5,23 @@
 #include "array.h"
 #include <stdlib.h>
 
-ast_node createAstEmpty();
-ast_node createAstBlock(array arr, enum block_isScoped scoped);
-ast_node createAstAssignment(char* varname, ast_node expr);
-ast_node createAstDeclaration(char* varname, ast_node expr);
-ast_node createAstFunctionDef(char* fname, array formalParams, ast_node block);
-ast_node createAstFunctionCall(char* fname, array actualParams);
-ast_node createAstFunctionReturn(ast_node expr);
-ast_node createAstDaca(ast_node expr, ast_node ifTrue, ast_node ifFalse);
-ast_node createAstCatTimp(ast_node expr, ast_node block);
+ast_node ast_createEmpty();
+ast_node ast_createBlock(array arr, enum block_isScoped scoped);
+ast_node ast_createAssignment(char* varname, ast_node expr);
+ast_node ast_createDeclaration(char* varname, ast_node expr);
+ast_node ast_createFunctionDef(char* fname, array formalParams, ast_node block);
+ast_node ast_createFunctionCall(char* fname, array actualParams);
+ast_node ast_createFunctionReturn(ast_node expr);
+ast_node ast_createDaca(ast_node expr, ast_node ifTrue, ast_node ifFalse);
+ast_node ast_createCatTimp(ast_node expr, ast_node block);
 
-ast_node createAstNumLiteral(double val);
-ast_node createAstStrLiteral(char* str);
-ast_node createAstNuiLiteral();
-ast_node createAstIdentifierLiteral(char* identifier);
+ast_node ast_createNumLiteral(double val);
+ast_node ast_createStrLiteral(char* str);
+ast_node ast_createNuiLiteral();
+ast_node ast_createIdentifierLiteral(char* identifier);
 
-ast_node createAstBinaryOp(enum operator_kind_t op, ast_node left, ast_node right);
-ast_node createAstUnaryOp(enum operator_kind_t op, ast_node right);
+ast_node ast_createBinaryOp(enum operator_kind_t op, ast_node left, ast_node right);
+ast_node ast_createUnaryOp(enum operator_kind_t op, ast_node right);
 
 void astSetBlockScope(ast_node block, enum block_isScoped scoped);
 

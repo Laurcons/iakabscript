@@ -35,17 +35,17 @@ int yyerror(char*);
 
 st:
     statements
-    { rootNode = createAstBlock($1, BLOCK_NOT_SCOPED); }
+    { rootNode = ast_createBlock($1, BLOCK_NOT_SCOPED); }
     ;
 
 scopedBlock:
   FA PERIOD statements GATA
-  { $$ = createAstBlock($3, BLOCK_SCOPED); }
+  { $$ = ast_createBlock($3, BLOCK_SCOPED); }
   ;
 
 unscopedBlock:
   FA PERIOD statements GATA
-  { $$ = createAstBlock($3, BLOCK_NOT_SCOPED); }
+  { $$ = ast_createBlock($3, BLOCK_NOT_SCOPED); }
   ;
 
 statements:
@@ -59,7 +59,7 @@ statements:
 
 statement:
     /* nothing */
-    { $$ = createAstEmpty(); }
+    { $$ = ast_createEmpty(); }
   | assignment
   | declaration
   | functionDef
@@ -75,30 +75,30 @@ flowControl:
 
 daca:
     DACA expression ATUNCI scopedBlock
-    { $$ = createAstDaca($2, $4, NULL); }
+    { $$ = ast_createDaca($2, $4, NULL); }
   | DACA expression ATUNCI scopedBlock ALTFEL scopedBlock
-    { $$ = createAstDaca($2, $4, $6); }
+    { $$ = ast_createDaca($2, $4, $6); }
     ;
 
 catTimp:
     CAT_TIMP expression scopedBlock
-    { $$ = createAstCatTimp($2, $3); }
+    { $$ = ast_createCatTimp($2, $3); }
     ;
 
 functionCall:
     HOHOH IDENTIFIER
-    { $$ = createAstFunctionCall($2, arr_create()); }
+    { $$ = ast_createFunctionCall($2, arr_create()); }
   | HOHO IDENTIFIER actualParamList HOH
-    { $$ = createAstFunctionCall($2, $3); }
+    { $$ = ast_createFunctionCall($2, $3); }
   | HOHO IDENTIFIER HOH
     { stopHard("hoho..hoh syntax is not allowed when function takes no parameters"); }
     ;
 
 functionDef:
     NU_HOHO_DECI IDENTIFIER IA NIMIC SI unscopedBlock
-    { $$ = createAstFunctionDef($2, arr_create(), $6); }
+    { $$ = ast_createFunctionDef($2, arr_create(), $6); }
   | NU_HOHO_DECI IDENTIFIER IA formalParamList SI unscopedBlock
-    { $$ = createAstFunctionDef($2, $4, $6); }
+    { $$ = ast_createFunctionDef($2, $4, $6); }
     ;
 
 formalParamList:
@@ -117,48 +117,48 @@ actualParamList:
 
 assignment:
     IDENTIFIER II expression
-    { $$ = createAstAssignment($1, $3); }
+    { $$ = ast_createAssignment($1, $3); }
     ;
 
 declaration:
     NU_DECI IDENTIFIER II expression
-    { $$ = createAstDeclaration($2, $4); }
+    { $$ = ast_createDeclaration($2, $4); }
     ;
 
 functionReturn:
     IESI expression
-    { $$ = createAstFunctionReturn($2); }
+    { $$ = ast_createFunctionReturn($2); }
   | IESI
-    { $$ = createAstFunctionReturn(createAstNuiLiteral()); }
+    { $$ = ast_createFunctionReturn(ast_createNuiLiteral()); }
     ;
 
 literal:
     NUI
-    { $$ = createAstNuiLiteral(); }
+    { $$ = ast_createNuiLiteral(); }
   | NUMBERLIT
-    { $$ = createAstNumLiteral($1); }
+    { $$ = ast_createNumLiteral($1); }
   | STRINGLIT
-    { $$ = createAstStrLiteral($1); }
+    { $$ = ast_createStrLiteral($1); }
   | IDENTIFIER
-    { $$ = createAstIdentifierLiteral($1); }
+    { $$ = ast_createIdentifierLiteral($1); }
     ;
 
 expression:
     expression1
     { $$ = $1; }
   | expression EGAL expression1
-    { $$ = createAstBinaryOp(OP_EGAL, $1, $3); }
+    { $$ = ast_createBinaryOp(OP_EGAL, $1, $3); }
   | expression NUEGAL expression1
-    { $$ = createAstBinaryOp(OP_NUEGAL, $1, $3); }
+    { $$ = ast_createBinaryOp(OP_NUEGAL, $1, $3); }
     ;
 
 expression1:
     expression2
     { $$ = $1; }
   | expression1 PLUS expression2
-    { $$ = createAstBinaryOp(OP_PLUS, $1, $3); }
+    { $$ = ast_createBinaryOp(OP_PLUS, $1, $3); }
   | expression1 MINUS expression2
-    { $$ = createAstBinaryOp(OP_MINUS, $1, $3); }
+    { $$ = ast_createBinaryOp(OP_MINUS, $1, $3); }
     ;
 
 expression2:
@@ -167,9 +167,9 @@ expression2:
   | functionCall
     { $$ = $1; }
   | expression2 ORI literal
-    { $$ = createAstBinaryOp(OP_ORI, $1, $3); }
+    { $$ = ast_createBinaryOp(OP_ORI, $1, $3); }
   | expression2 IMPARTIT_LA literal
-    { $$ = createAstBinaryOp(OP_IMPARTIT_LA, $1, $3); }
+    { $$ = ast_createBinaryOp(OP_IMPARTIT_LA, $1, $3); }
     ;
 
 %%
