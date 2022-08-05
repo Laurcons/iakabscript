@@ -17,13 +17,15 @@ int yyerror(char*);
 
 %token PERIOD
 %token NU_DECI NU_HOHO_DECI FA GATA II IA SI NUI NIMIC
-%token HOHOH HOHO HOH
+%token HOHOH HOHO HOH IESI
 %token EGAL NUEGAL INVERS PLUS MINUS ORI IMPARTIT_LA
+%token DACA ATUNCI ALTFEL CAT_TIMP
 %token <text> IDENTIFIER STRINGLIT
 %token <num> NUMBERLIT
 
-%type <node> assignment literal statement declaration block
-%type <node> functionDef functionCall
+%type <node> assignment literal statement declaration scopedBlock unscopedBlock
+%type <node> functionDef functionCall functionReturn
+%type <node> flowControl daca catTimp
 %type <node> expression expression1 expression2
 %type <arr> statements formalParamList actualParamList
 
@@ -36,9 +38,14 @@ st:
     { rootNode = createAstBlock($1, BLOCK_NOT_SCOPED); }
     ;
 
-block:
+scopedBlock:
   FA PERIOD statements GATA
   { $$ = createAstBlock($3, BLOCK_SCOPED); }
+  ;
+
+unscopedBlock:
+  FA PERIOD statements GATA
+  { $$ = createAstBlock($3, BLOCK_NOT_SCOPED); }
   ;
 
 statements:
@@ -46,7 +53,7 @@ statements:
     { $$ = arr_create(); }
   | statements statement PERIOD
     { arr_add($1, $2); $$ = $1; }
-  | statements block
+  | statements scopedBlock
     { arr_add($1, $2); $$ = $1; }
     ;
 
@@ -54,13 +61,28 @@ statement:
     /* nothing */
     { $$ = createAstEmpty(); }
   | assignment
-    { $$ = $1; }
   | declaration
-    { $$ = $1; }
   | functionDef
-    { $$ = $1; }
   | functionCall
-    { $$ = $1; }
+  | functionReturn
+  | flowControl
+    ;
+
+flowControl:
+    daca
+  | catTimp
+    ;
+
+daca:
+    DACA expression ATUNCI scopedBlock
+    { $$ = createAstDaca($2, $4, NULL); }
+  | DACA expression ATUNCI scopedBlock ALTFEL scopedBlock
+    { $$ = createAstDaca($2, $4, $6); }
+    ;
+
+catTimp:
+    CAT_TIMP expression scopedBlock
+    { $$ = createAstCatTimp($2, $3); }
     ;
 
 functionCall:
@@ -68,17 +90,15 @@ functionCall:
     { $$ = createAstFunctionCall($2, arr_create()); }
   | HOHO IDENTIFIER actualParamList HOH
     { $$ = createAstFunctionCall($2, $3); }
+  | HOHO IDENTIFIER HOH
+    { stopHard("hoho..hoh syntax is not allowed when function takes no parameters"); }
     ;
 
 functionDef:
-    NU_HOHO_DECI IDENTIFIER IA NIMIC SI block
+    NU_HOHO_DECI IDENTIFIER IA NIMIC SI unscopedBlock
     { $$ = createAstFunctionDef($2, arr_create(), $6); }
-  | NU_HOHO_DECI IDENTIFIER IA formalParamList SI block
-    {
-      $$ = createAstFunctionDef($2, $4, $6);
-      /* override the block_scoped setting since this needs not be scoped */
-      astSetBlockScope($6, BLOCK_NOT_SCOPED);
-    }
+  | NU_HOHO_DECI IDENTIFIER IA formalParamList SI unscopedBlock
+    { $$ = createAstFunctionDef($2, $4, $6); }
     ;
 
 formalParamList:
@@ -96,13 +116,20 @@ actualParamList:
   ;
 
 assignment:
-    IDENTIFIER II literal
+    IDENTIFIER II expression
     { $$ = createAstAssignment($1, $3); }
     ;
 
 declaration:
     NU_DECI IDENTIFIER II expression
     { $$ = createAstDeclaration($2, $4); }
+    ;
+
+functionReturn:
+    IESI expression
+    { $$ = createAstFunctionReturn($2); }
+  | IESI
+    { $$ = createAstFunctionReturn(createAstNuiLiteral()); }
     ;
 
 literal:

@@ -37,9 +37,14 @@ sta+i(.*)\n { /* 'stai' line break, ignore it and continue sentence parsing */ y
  /* control and declaration keywords */
 "nu deci" { return NU_DECI; }
 "nu hoho deci" { return NU_HOHO_DECI; }
+"cat timp" { return CAT_TIMP; }
+"daca" { return DACA; }
+"atunci" { return ATUNCI; }
+"altfel" { return ALTFEL; }
 "hohoh" { return HOHOH; }
 "hoho" { return HOHO; }
 "hoh" { return HOH; }
+"iesi" { return IESI; }
 "ia" { return IA; }
 "si" { return SI; }
 "nimic" { return NIMIC; }

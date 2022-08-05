@@ -22,7 +22,7 @@ void _visitBlock(ast_node n) {
     dbgprintf("Visiting Block\n");
     ast_block block = n->payload;
     if (block->scoped == BLOCK_SCOPED)
-        stack_createFrame();
+        stack_createBlockFrame();
     array arr = block->statements;
     stack_frame frame = stack_getCurrentFrame();
     for (int i = 0; i < arr->len; i++) {
@@ -30,16 +30,8 @@ void _visitBlock(ast_node n) {
            break;
         _visitAst(arr->stuff[i]);
     }
-    if (block->scoped == BLOCK_SCOPED) {
-        // we should also push the return value up, to the parent frame
-        //  if a parent frame exists, and we're exiting a scoped block, it
-        //  means that that parent frame is either a function frame or
-        //  another scoped block frame
-        if (frame->prev != NULL) {
-            frame->prev->returnValue = vimm_copy(frame->returnValue);
-        }
+    if (block->scoped == BLOCK_SCOPED)
         stack_popFrame();
-    }
 }
 
 void _visitAssignment(ast_node n) {
@@ -91,12 +83,40 @@ void _visitFunctionCall(ast_node n) {
 }
 
 static void _visitFunctionReturn(ast_node n) {
+    dbgprintf("Visiting FunctionReturn\n");
     // assign the expression to the returnValue of the current stack frame
     ast_node expr = n->payload;
-    stack_frame frame = stack_getCurrentFrame();
-    frame->returnValue = evalExpr(expr);
+    value_immediate vimm = evalExpr(expr);
+    stack_setReturnValue(vimm);
+    vimm_free(vimm);
     // the code in _visitBlock should take care of actually exiting the
     //  function now
+}
+
+static void _visitDaca(ast_node n) {
+    dbgprintf("Visiting Daca\n");
+    ast_daca daca = n->payload;
+    value_immediate result = evalExpr(daca->expr);
+    if (vimm_isTruthy(result)) {
+        _visitAst(daca->ifTrue);
+    } else {
+        if (daca->ifFalse != NULL)
+            _visitAst(daca->ifFalse);
+    }
+    vimm_free(result);
+}
+
+static void _visitCatTimp(ast_node n) {
+    dbgprintf("Visiting CatTimp\n");
+    ast_catTimp ctimp = n->payload;
+    while (1) {
+        value_immediate vimm = evalExpr(ctimp->expr);
+        int isTruthy = vimm_isTruthy(vimm);
+        vimm_free(vimm);
+        if (!isTruthy)
+            break;
+        _visitAst(ctimp->block);
+    }
 }
 
 void _visitAst(ast_node n) {
@@ -108,6 +128,8 @@ void _visitAst(ast_node n) {
         case AST_FUNCTIONDEF: break;
         case AST_FUNCTIONCALL: _visitFunctionCall(n); break;
         case AST_FUNCTIONRETURN: _visitFunctionReturn(n); break;
+        case AST_DACA: _visitDaca(n); break;
+        case AST_CATTIMP: _visitCatTimp(n); break;
         default: stopHard("AST node type %d not handled", n->type); break;
     }
 }

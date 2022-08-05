@@ -39,7 +39,9 @@ value_immediate evalExpr(ast_node n) {
             value_immediate othervimm = sym->payload;
             vimm = vimm_copy(othervimm);
         }
-        dbgprintf("expression AST_IDENTIFIER_LITERAL (%s)\n", identifier);
+        dbgprintf("expression AST_IDENTIFIER_LITERAL (%s) is ", identifier);
+        vimm_dbgprint(vimm);
+        dbgprintf("\n");
     }
     else if (n->type == AST_FUNCTIONCALL) {
         ast_functioncall fcall = n->payload;
@@ -59,7 +61,7 @@ value_immediate evalExpr(ast_node n) {
             vimm = builtin_invoke(fcall->identifier, vimms);
         } else {
             symbol_function symf = symt_getFunction(fcall->identifier);
-            stack_createFrame();
+            stack_createFunctionFrame();
             stack_frame frame = stack_getCurrentFrame();
             // push the variables on the stack
             for (int i = 0; i < vimms->len; i++) {
@@ -91,11 +93,13 @@ value_immediate evalExpr(ast_node n) {
         dbgprintf("Operator %d at binaryop\n", bop->operator);
         value_immediate vimmleft = evalExpr(bop->left);
         value_immediate vimmright = evalExpr(bop->right);
-        if (bop->operator == OP_PLUS) {
+        if (bop->operator == OP_PLUS || bop->operator == OP_MINUS) {
             _assertImmediateType(vimmleft, VAL_NUMBER);
             _assertImmediateType(vimmright, VAL_NUMBER);
             double* pleft = vimmleft->payload;
             double* pright = vimmright->payload;
+            if (bop->operator == OP_MINUS)
+                *pright = -(*pright);
             double d = *pleft + *pright;
             vimm = vimm_createNumber(d);
             dbgprintf("expression AST_BINARYOP (OP_PLUS) is %f\n", d);

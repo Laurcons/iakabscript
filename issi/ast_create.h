@@ -12,6 +12,8 @@ ast_node createAstDeclaration(char* varname, ast_node expr);
 ast_node createAstFunctionDef(char* fname, array formalParams, ast_node block);
 ast_node createAstFunctionCall(char* fname, array actualParams);
 ast_node createAstFunctionReturn(ast_node expr);
+ast_node createAstDaca(ast_node expr, ast_node ifTrue, ast_node ifFalse);
+ast_node createAstCatTimp(ast_node expr, ast_node block);
 
 ast_node createAstNumLiteral(double val);
 ast_node createAstStrLiteral(char* str);

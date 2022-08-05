@@ -55,6 +55,21 @@ ast_node createAstFunctionReturn(ast_node expr) {
     return _createAstNode(AST_FUNCTIONRETURN, expr);
 }
 
+ast_node createAstDaca(ast_node expr, ast_node ifTrue, ast_node ifFalse) {
+    ast_daca daca = malloc(sizeof(ast_daca_t));
+    daca->expr = expr;
+    daca->ifTrue = ifTrue;
+    daca->ifFalse = ifFalse;
+    return _createAstNode(AST_DACA, daca);
+}
+
+ast_node createAstCatTimp(ast_node expr, ast_node block) {
+    ast_catTimp ctimp = malloc(sizeof(ast_catTimp_t));
+    ctimp->expr = expr;
+    ctimp->block = block;
+    return _createAstNode(AST_CATTIMP, ctimp);
+}
+
 ast_node createAstNumLiteral(double val) {
     double* d = malloc(sizeof(double));
     *d = val;

@@ -15,6 +15,8 @@ enum node_kind_t {
     AST_FUNCTIONDEF, // ast_functiondef
     AST_FUNCTIONCALL, // ast_functioncall
     AST_FUNCTIONRETURN, // ast_node (with an expression)
+    AST_DACA, // ast_daca
+    AST_CATTIMP, // ast_catTimp
     AST_BINARYOP, // ast_binaryop
     AST_UNARYOP, // ast_unaryop
 };
@@ -63,6 +65,17 @@ typedef struct {
     char* identifier;
     array actualParams; // char*
 } *ast_functioncall, ast_functioncall_t;
+
+typedef struct {
+    ast_node expr;
+    ast_node ifTrue; // ast_block
+    ast_node ifFalse; // ast_block, might be NULL
+} *ast_daca, ast_daca_t;
+
+typedef struct {
+    ast_node expr;
+    ast_node block;
+} *ast_catTimp, ast_catTimp_t;
 
 typedef struct {
     enum operator_kind_t operator;

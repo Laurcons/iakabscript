@@ -58,6 +58,21 @@ int vimm_equals(value_immediate first, value_immediate second) {
     }
 }
 
+int vimm_isTruthy(value_immediate vimm) {
+    switch (vimm->type) {
+        case VAL_NUI: return 0;
+        case VAL_NUMBER: {
+            double d = *((double*)vimm->payload);
+            return d != 0;
+        };
+        case VAL_STRING: return 1;
+        default: {
+            stopHard("Unknown value_kind_t %d\n", vimm->type);
+            return 0;
+        }
+    }
+}
+
 void vimm_dbgprint(value_immediate vimm) {
     switch (vimm->type) {
         case VAL_NUI:
