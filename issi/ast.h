@@ -22,13 +22,19 @@ enum node_kind_t {
 };
 
 enum operator_kind_t {
+    // hybrid ops
+    OP_MINUS,
     // binary ops
     OP_EGAL,
     OP_NUEGAL,
+    OP_MAIMIC,
+    OP_MAIMARE,
+    OP_DEODATACU,
+    OP_SAU,
     OP_PLUS,
-    OP_MINUS,
     OP_ORI,
     OP_IMPARTIT_LA,
+    OP_MODULO,
     // unary ops
     OP_INVERS,
 };

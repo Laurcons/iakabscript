@@ -17,7 +17,7 @@ value_immediate vimm_createNumber(double d);
 value_immediate vimm_createNui();
 
 value_immediate vimm_copy(value_immediate other);
-int vimm_equals(value_immediate first, value_immediate second);
+int vimm_compare(value_immediate first, value_immediate second);
 int vimm_isTruthy(value_immediate vimm);
 void vimm_dbgprint(value_immediate vimm);
 

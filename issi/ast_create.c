@@ -97,6 +97,13 @@ ast_node ast_createBinaryOp(enum operator_kind_t op, ast_node left, ast_node rig
     return _ast_createNode(AST_BINARYOP, bop);
 }
 
+ast_node ast_createUnaryOp(enum operator_kind_t op, ast_node right) {
+    ast_unaryop uop = malloc(sizeof(ast_unaryop_t));
+    uop->operator = op;
+    uop->right = right;
+    return _ast_createNode(AST_UNARYOP, uop);
+}
+
 void astSetBlockScope(ast_node node, enum block_isScoped scoped) {
     ast_block block = node->payload;
     block->scoped = scoped;

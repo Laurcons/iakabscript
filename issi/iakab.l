@@ -26,13 +26,18 @@ sta+i(.*)\n { /* 'stai' line break, ignore it and continue sentence parsing */ y
 
  /* expressions and words */
  /* operators */
+"maimic" { return MAIMIC; }
+"maimare" { return MAIMARE; }
 "egal" { return EGAL; }
 "nuegal" { return NUEGAL; }
 "invers" { return INVERS; }
+"deodatacu" { return DEODATACU; }
+"sau" { return SAU; }
 "plus" { return PLUS; }
 "minus" { return MINUS; }
 "ori" { return ORI; }
-"impartit la" { return IMPARTIT_LA; }
+"impartitla" { return IMPARTITLA; }
+"modulo" { return MODULO; }
 
  /* control and declaration keywords */
 "nu deci" { return NU_DECI; }

@@ -36,20 +36,23 @@ value_immediate vimm_copy(value_immediate other) {
     return NULL;
 }
 
-int vimm_equals(value_immediate first, value_immediate second) {
+// -1 if first < second, 0 if ==, 1 if >, -2 if uncomparable
+int vimm_compare(value_immediate first, value_immediate second) {
     if (first->type != second->type)
-        return 0;
+        return -2;
     switch (first->type) {
-        case VAL_NUI: return 1; // nothing more to compare here
+        case VAL_NUI: return 0;
         case VAL_NUMBER: {
             double d1 = *((double*)first->payload);
             double d2 = *((double*)second->payload);
-            return (fabs(d1 - d2) < 0.000001);
+            if (d1 == d2) return 0;
+            if (d1 < d2) return -1;
+            return 1;
         };
         case VAL_STRING: {
             char* s1 = (char*)first->payload;
             char* s2 = (char*)second->payload;
-            return strcmp(s1, s2) == 0;
+            return strcmp(s1, s2);
         };
         default: {
             stopHard("Unknown value_kind_t %d\n", first->type);

@@ -18,7 +18,7 @@ int yyerror(char*);
 %token PERIOD
 %token NU_DECI NU_HOHO_DECI FA GATA II IA SI NUI NIMIC
 %token HOHOH HOHO HOH IESI
-%token EGAL NUEGAL INVERS PLUS MINUS ORI IMPARTIT_LA
+%token EGAL NUEGAL MAIMIC MAIMARE INVERS SAU DEODATACU PLUS MINUS ORI IMPARTITLA MODULO
 %token DACA ATUNCI ALTFEL CAT_TIMP
 %token <text> IDENTIFIER STRINGLIT
 %token <num> NUMBERLIT
@@ -159,6 +159,8 @@ expression1:
     { $$ = ast_createBinaryOp(OP_PLUS, $1, $3); }
   | expression1 MINUS expression2
     { $$ = ast_createBinaryOp(OP_MINUS, $1, $3); }
+  | MINUS expression2
+    { $$ = ast_createUnaryOp(OP_MINUS, $2); }
     ;
 
 expression2:
@@ -168,7 +170,7 @@ expression2:
     { $$ = $1; }
   | expression2 ORI literal
     { $$ = ast_createBinaryOp(OP_ORI, $1, $3); }
-  | expression2 IMPARTIT_LA literal
+  | expression2 IMPARTITLA literal
     { $$ = ast_createBinaryOp(OP_IMPARTIT_LA, $1, $3); }
     ;
 
