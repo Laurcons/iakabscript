@@ -11,14 +11,14 @@
 #include <string.h>
 #include <math.h>
 
-void _visitAst(ast_node);
+static void _visitAst(ast_node);
 
 int visitAst(ast_node n) {
     _visitAst(n);
     return 0;
 }
 
-void _visitBlock(ast_node n) {
+static void _visitBlock(ast_node n) {
     dbgprintf("Visiting Block\n");
     ast_block block = n->payload;
     if (block->scoped == BLOCK_SCOPED)
@@ -34,7 +34,7 @@ void _visitBlock(ast_node n) {
         stack_popFrame();
 }
 
-void _visitAssignment(ast_node n) {
+static void _visitAssignment(ast_node n) {
     dbgprintf("Visiting Assignment\n");
     ast_assignment asn = n->payload;
     value_immediate result = evalExpr(asn->expr);
@@ -50,7 +50,7 @@ void _visitAssignment(ast_node n) {
     vimm_free(result);
 }
 
-void _visitDeclaration(ast_node n) {
+static void _visitDeclaration(ast_node n) {
     dbgprintf("Visiting Declaration\n");
     ast_declaration decl = n->payload;
     value_immediate result = evalExpr(decl->expr);
@@ -75,7 +75,7 @@ void _visitDeclaration(ast_node n) {
     vimm_free(result);
 }
 
-void _visitFunctionCall(ast_node n) {
+static void _visitFunctionCall(ast_node n) {
     dbgprintf("Visiting FunctionCall\n");
     // treat this call as an expression and ignore its value
     value_immediate result = evalExpr(n);
@@ -119,7 +119,7 @@ static void _visitCatTimp(ast_node n) {
     }
 }
 
-void _visitAst(ast_node n) {
+static void _visitAst(ast_node n) {
     switch (n->type) {
         case AST_EMPTY: break;
         case AST_BLOCK: _visitBlock(n); break;

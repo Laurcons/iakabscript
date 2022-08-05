@@ -4,7 +4,7 @@
 ast_node rootNode = NULL;
 
 // internal
-ast_node _ast_createNode(enum node_kind_t type, void* payload) {
+static ast_node _ast_createNode(enum node_kind_t type, void* payload) {
     ast_node n = malloc(sizeof(ast_node_t));
     n->type = type;
     n->payload = payload;
