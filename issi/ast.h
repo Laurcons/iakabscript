@@ -14,6 +14,7 @@ enum node_kind_t {
     AST_DECLARATION, // ast_declaration
     AST_FUNCTIONDEF, // ast_functiondef
     AST_FUNCTIONCALL, // ast_functioncall
+    AST_FUNCTIONRETURN, // ast_node (with an expression)
     AST_BINARYOP, // ast_binaryop
     AST_UNARYOP, // ast_unaryop
 };

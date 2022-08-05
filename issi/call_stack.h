@@ -14,6 +14,7 @@ typedef struct framed_variable_t {
 typedef struct stack_frame_t {
     struct stack_frame_t* prev;
     array variables; // array of framed_variable
+    value_immediate returnValue; // or NULL if not yet set
 } *stack_frame, stack_frame_t;
 
 stack_frame stack_getCurrentFrame();

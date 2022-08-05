@@ -25,5 +25,5 @@ int main(int argc, char** argv) {
     dbgprintf("-- Parsing symbols\n");
     initialVisitAst();
     dbgprintf("-- Executing code\n");
-    visitAst();
+    visitAst(rootNode);
 }

@@ -13,6 +13,7 @@ void stack_createFrame() {
     frame->prev = currentFrame;
     currentFrame = frame;
     frame->variables = arr_create();
+    frame->returnValue = NULL;
 }
 
 void stack_popFrame() {
@@ -23,6 +24,8 @@ void stack_popFrame() {
         framed_variable fvar = frame->variables->stuff[i];
         framedvar_free(fvar);
     }
+    if (frame->returnValue != NULL)
+        vimm_free(frame->returnValue);
     free(frame);
 }
 

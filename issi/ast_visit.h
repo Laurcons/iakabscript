@@ -1,6 +1,8 @@
 #ifndef AST_VISIT_H_INCLUDED
 #define AST_VISIT_H_INCLUDED
 
-int visitAst();
+#include "ast.h"
+
+int visitAst(ast_node n);
 
 #endif

@@ -51,6 +51,10 @@ ast_node createAstFunctionCall(char* fname, array actualParams) {
     return _createAstNode(AST_FUNCTIONCALL, fcall);
 }
 
+ast_node createAstFunctionReturn(ast_node expr) {
+    return _createAstNode(AST_FUNCTIONRETURN, expr);
+}
+
 ast_node createAstNumLiteral(double val) {
     double* d = malloc(sizeof(double));
     *d = val;

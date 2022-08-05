@@ -43,7 +43,10 @@ value_immediate evalExpr(ast_node n) {
     }
     else if (n->type == AST_FUNCTIONCALL) {
         ast_functioncall fcall = n->payload;
-        dbgprintf("evaluating function call expression to %s\n", fcall->identifier);
+        dbgprintf("Evaluating function call to %s with %d params\n",
+            fcall->identifier,
+            fcall->actualParams->len
+        );
         array vimms = arr_create();
         // evaluate all exprs to immediates
         for (int i = 0; i < fcall->actualParams->len; i++) {
@@ -70,7 +73,9 @@ value_immediate evalExpr(ast_node n) {
                 );
             }
             visitAst(symf->block);
-            vimm = vimm_createNui();
+            if (frame->returnValue != NULL)
+                vimm = vimm_copy(frame->returnValue);
+            else vimm = vimm_createNui();
             stack_popFrame();
         }
         for (int i = 0; i < vimms->len; i++) {

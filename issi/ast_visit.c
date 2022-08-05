@@ -13,8 +13,8 @@
 
 void _visitAst(ast_node);
 
-int visitAst() {
-    _visitAst(rootNode);
+int visitAst(ast_node n) {
+    _visitAst(n);
     return 0;
 }
 
@@ -24,10 +24,22 @@ void _visitBlock(ast_node n) {
     if (block->scoped == BLOCK_SCOPED)
         stack_createFrame();
     array arr = block->statements;
-    for (int i = 0; i < arr->len; i++)
+    stack_frame frame = stack_getCurrentFrame();
+    for (int i = 0; i < arr->len; i++) {
+        if (frame != NULL && frame->returnValue != NULL)
+           break;
         _visitAst(arr->stuff[i]);
-    if (block->scoped == BLOCK_SCOPED)
+    }
+    if (block->scoped == BLOCK_SCOPED) {
+        // we should also push the return value up, to the parent frame
+        //  if a parent frame exists, and we're exiting a scoped block, it
+        //  means that that parent frame is either a function frame or
+        //  another scoped block frame
+        if (frame->prev != NULL) {
+            frame->prev->returnValue = vimm_copy(frame->returnValue);
+        }
         stack_popFrame();
+    }
 }
 
 void _visitAssignment(ast_node n) {
@@ -73,39 +85,18 @@ void _visitDeclaration(ast_node n) {
 
 void _visitFunctionCall(ast_node n) {
     dbgprintf("Visiting FunctionCall\n");
-    ast_functioncall fcall = n->payload;
-    array vimms = arr_create();
-    // evaluate all exprs to immediates
-    for (int i = 0; i < fcall->actualParams->len; i++) {
-        arr_add(
-            vimms,
-            evalExpr(fcall->actualParams->stuff[i])
-        );
-    }
-    if (symt_isBuiltin(fcall->identifier)) {
-        builtin_invoke(fcall->identifier, vimms);
-        for (int i = 0; i < vimms->len; i++) {
-            value_immediate vimm = vimms->stuff[i];
-            vimm_free(vimm);
-        }
-    } else {
-        symbol_function symf = symt_getFunction(fcall->identifier);
-        stack_createFrame();
-        stack_frame frame = stack_getCurrentFrame();
-        // push the variables on the stack
-        for (int i = 0; i < vimms->len; i++) {
-            value_immediate vimm = vimms->stuff[i];
-            arr_add(
-                frame->variables,
-                framedvar_create(
-                    symf->params->stuff[i], // the identifier
-                    vimm // the value
-                )
-            );
-        }
-        _visitAst(symf->block);
-        stack_popFrame();
-    }
+    // treat this call as an expression and ignore its value
+    value_immediate result = evalExpr(n);
+    vimm_free(result);
+}
+
+static void _visitFunctionReturn(ast_node n) {
+    // assign the expression to the returnValue of the current stack frame
+    ast_node expr = n->payload;
+    stack_frame frame = stack_getCurrentFrame();
+    frame->returnValue = evalExpr(expr);
+    // the code in _visitBlock should take care of actually exiting the
+    //  function now
 }
 
 void _visitAst(ast_node n) {
@@ -116,6 +107,7 @@ void _visitAst(ast_node n) {
         case AST_DECLARATION: _visitDeclaration(n); break;
         case AST_FUNCTIONDEF: break;
         case AST_FUNCTIONCALL: _visitFunctionCall(n); break;
+        case AST_FUNCTIONRETURN: _visitFunctionReturn(n); break;
         default: stopHard("AST node type %d not handled", n->type); break;
     }
 }
