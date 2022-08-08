@@ -129,6 +129,7 @@ Invalid identifiers:
 * `cacat🥰🥰🥰`
 * `nu`
 * `busimiaicoiele`
+* `golit`
 * `stai` or `deci` or `hoho` etc.
 
 ## Variable declarations
