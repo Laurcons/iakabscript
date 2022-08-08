@@ -110,5 +110,4 @@ void astSetBlockScope(ast_node node, enum block_isScoped scoped) {
 }
 
 void astInit() {
-    //rootNode = ast_createBlock(arr_create());
 }

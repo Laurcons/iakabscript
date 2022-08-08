@@ -59,7 +59,7 @@ unscopedBlock:
 
 statements:
     /* empty */
-    { $$ = arr_create(); }
+    { $$ = arr_create(&arr_nofree); }
   | statements statement PERIOD
     { arr_add($1, $2); $$ = $1; }
   | statements scopedBlock
@@ -96,7 +96,7 @@ catTimp:
 
 functionCall:
     HOHOH IDENTIFIER
-    { $$ = ast_createFunctionCall($2, arr_create()); }
+    { $$ = ast_createFunctionCall($2, arr_create(&arr_nofree)); }
   | HOHO IDENTIFIER actualParamList HOH
     { $$ = ast_createFunctionCall($2, $3); }
   | HOHO IDENTIFIER HOH
@@ -105,21 +105,21 @@ functionCall:
 
 functionDef:
     NU_HOHO_DECI IDENTIFIER IA NIMIC SI unscopedBlock
-    { $$ = ast_createFunctionDef($2, arr_create(), $6); }
+    { $$ = ast_createFunctionDef($2, arr_create(&arr_nofree), $6); }
   | NU_HOHO_DECI IDENTIFIER IA formalParamList SI unscopedBlock
     { $$ = ast_createFunctionDef($2, $4, $6); }
     ;
 
 formalParamList:
     IDENTIFIER
-    { $$ = arr_create(); arr_add($$, $1); }
+    { $$ = arr_create(&arr_nofree); arr_add($$, $1); }
   | formalParamList IDENTIFIER
     { arr_add($1, $2); }
     ;
 
 actualParamList:
     expression
-    { $$ = arr_create(); arr_add($$, $1); }
+    { $$ = arr_create(&arr_nofree); arr_add($$, $1); }
   | actualParamList SI expression
     { arr_add($1, $3); }
   ;

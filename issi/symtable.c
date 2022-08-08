@@ -18,7 +18,7 @@ static void _declareBuiltin(char* identifier) {
 }
 
 void symt_init() {
-    symtable = arr_create();
+    symtable = arr_create(&arr_nofree);
     // create global builtin function symbols
     int i = 0;
     while (builtinList[i].runner != NULL) {
@@ -29,8 +29,8 @@ void symt_init() {
 
 void symt_declareVar(char* identifier) {
     // try find variable
-    for (int i = 0; i < symtable->len; i++) {
-        symbol sym = symtable->stuff[i];
+    for (int i = 0; i < arr_len(symtable); i++) {
+        symbol sym = arr_get(symtable, i);
         if (strcmp(sym->identifier, identifier) == 0)
             runtimeStop("Variable %s already declared", sym->identifier);
     }
@@ -55,8 +55,8 @@ void symt_declareFunction(char* identifier, ast_functiondef fdef) {
 
 symbol symt_getVar(char* identifier) {
     // try find variable
-    for (int i = 0; i < symtable->len; i++) {
-        symbol sym = symtable->stuff[i];
+    for (int i = 0; i < arr_len(symtable); i++) {
+        symbol sym = arr_get(symtable, i);
         if (sym->type == SYM_VARIABLE && strcmp(sym->identifier, identifier) == 0)
             return sym;
     }
@@ -66,8 +66,8 @@ symbol symt_getVar(char* identifier) {
 
 int symt_isBuiltin(char* identifier) {
     // search for it
-    for (int i = 0; i < symtable->len; i++) {
-        symbol sym = symtable->stuff[i];
+    for (int i = 0; i < arr_len(symtable); i++) {
+        symbol sym = arr_get(symtable, i);
         if (sym->type == SYM_FUNCTION_BUILTIN && strcmp(sym->identifier, identifier) == 0)
             return 1;
     }
@@ -76,8 +76,8 @@ int symt_isBuiltin(char* identifier) {
 
 symbol_function symt_getFunction(char* identifier) {
     // search for it
-    for (int i = 0; i < symtable->len; i++) {
-        symbol sym = symtable->stuff[i];
+    for (int i = 0; i < arr_len(symtable); i++) {
+        symbol sym = arr_get(symtable, i);
         if (sym->type == SYM_FUNCTION && strcmp(sym->identifier, identifier) == 0)
             return sym->payload;
     }

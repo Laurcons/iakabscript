@@ -25,10 +25,10 @@ static void _visitBlock(ast_node n) {
         stack_createBlockFrame();
     array arr = block->statements;
     stack_frame frame = stack_getCurrentFrame();
-    for (int i = 0; i < arr->len; i++) {
+    for (int i = 0; i < arr_len(arr); i++) {
         if (frame != NULL && frame->returnValue != NULL)
            break;
-        _visitAst(arr->stuff[i]);
+        _visitAst(arr_get(arr, i));
     }
     if (block->scoped == BLOCK_SCOPED)
         stack_popFrame();

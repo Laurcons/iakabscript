@@ -16,8 +16,8 @@ int initialVisitAst() {
 static void _visitBlock(ast_node n) {
     ast_block block = n->payload;
     array arr = block->statements;
-    for (int i = 0; i < arr->len; i++) {
-        _visitAst(arr->stuff[i]);
+    for (int i = 0; i < arr_len(arr); i++) {
+        _visitAst(arr_get(arr, i));
     }
 }
 
@@ -30,7 +30,7 @@ static void _visitFunctionDef(ast_node n) {
     symt_declareFunction(fdef->identifier, fdef);
     dbgprintf("declared function %s with %d parameters\n",
         fdef->identifier,
-        fdef->formalParams->len
+        arr_len(fdef->formalParams)
     );
     _isWithinFunction = 1;
     _visitAst(fdef->block);

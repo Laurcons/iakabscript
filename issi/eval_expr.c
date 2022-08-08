@@ -57,14 +57,14 @@ static value_immediate _eval_functionCall(ast_node n) {
     ast_functioncall fcall = n->payload;
     dbgprintf("Evaluating function call to %s with %d params\n",
         fcall->identifier,
-        fcall->actualParams->len
+        arr_len(fcall->actualParams)
     );
-    array vimms = arr_create();
+    array vimms = arr_create(&vimm_free);
     // evaluate all exprs to immediates
-    for (int i = 0; i < fcall->actualParams->len; i++) {
+    for (int i = 0; i < arr_len(fcall->actualParams); i++) {
         arr_add(
             vimms,
-            evalExpr(fcall->actualParams->stuff[i])
+            evalExpr(arr_get(fcall->actualParams, i))
         );
     }
     if (symt_isBuiltin(fcall->identifier)) {
@@ -74,12 +74,12 @@ static value_immediate _eval_functionCall(ast_node n) {
         stack_createFunctionFrame();
         stack_frame frame = stack_getCurrentFrame();
         // push the variables on the stack
-        for (int i = 0; i < vimms->len; i++) {
-            value_immediate vimm = vimms->stuff[i];
+        for (int i = 0; i < arr_len(vimms); i++) {
+            value_immediate vimm = arr_get(vimms, i);
             arr_add(
                 frame->variables,
                 framedvar_create(
-                    symf->params->stuff[i], // the identifier
+                    arr_get(symf->params, i), // the identifier
                     vimm // the value
                 )
             );
@@ -90,10 +90,7 @@ static value_immediate _eval_functionCall(ast_node n) {
         else vimm = vimm_createNui();
         stack_popFrame();
     }
-    for (int i = 0; i < vimms->len; i++) {
-        value_immediate v = vimms->stuff[i];
-        vimm_free(v);
-    }
+    arr_free(vimms);
     dbgprintf("evaluated function call to ");
     vimm_dbgprint(vimm);
     dbgprintf("\n");

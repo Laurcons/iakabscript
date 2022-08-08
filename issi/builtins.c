@@ -17,8 +17,8 @@ identifier_handler_pair_t builtinList[] = {
 
 static value_immediate _zic(array params) {
     dbgprintf("ZIC CALL: ");
-    for (int i = 0; i < params->len; i++) {
-        value_immediate vimm = params->stuff[i];
+    for (int i = 0; i < arr_len(params); i++) {
+        value_immediate vimm = arr_get(params, i);
         switch (vimm->type) {
             case VAL_NUI:
                 printf("<nui>"); break;
@@ -40,7 +40,7 @@ static value_immediate _zic(array params) {
 
 static value_immediate _zi(array params) {
     dbgprintf("ZI CALL:\n");
-    if (params->len >= 1) {
+    if (arr_len(params) >= 1) {
         value_immediate vimm = params->stuff[0];
         if (vimm->type == VAL_STRING) {
             printf("%s", (char*)vimm->payload);
@@ -56,7 +56,7 @@ static value_immediate _zi(array params) {
 static value_immediate _fanumar(array params) {
     // TODO: support non-Human formatted numbers
     //int doariakab = 0;
-    if (params->len == 2) {
+    if (arr_len(params) == 2) {
         value_immediate vimm = params->stuff[1];
         if (vimm->type == VAL_STRING && strcmp(vimm->payload, "doariakab") == 0) {
             //doariakab = 1;
@@ -76,7 +76,7 @@ static value_immediate _fanumar(array params) {
 
 // array of value_immediates
 value_immediate builtin_invoke(char* identifier, array params) {
-    dbgprintf("Builtin call to %s with %d params\n", identifier, params->len);
+    dbgprintf("Builtin call to %s with %d params\n", identifier, arr_len(params));
     int i = 0;
     while (builtinList[i].identifier[0] != '0') {
         if (strcmp(identifier, builtinList[i].identifier) == 0) {

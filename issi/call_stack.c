@@ -12,7 +12,7 @@ void stack_createBlockFrame() {
     stack_frame frame = malloc(sizeof(stack_frame_t));
     frame->prev = currentFrame;
     currentFrame = frame;
-    frame->variables = arr_create();
+    frame->variables = arr_create(&vimm_free);
     frame->isFunctionFrame = 0;
     frame->returnValue = NULL;
 }
@@ -22,7 +22,7 @@ void stack_createFunctionFrame() {
     stack_frame frame = malloc(sizeof(stack_frame_t));
     frame->prev = currentFrame;
     currentFrame = frame;
-    frame->variables = arr_create();
+    frame->variables = arr_create(&vimm_free);
     frame->isFunctionFrame = 1;
     frame->returnValue = NULL;
 }
@@ -31,8 +31,8 @@ void stack_popFrame() {
     dbgprintf("Popping stack frame\n");
     stack_frame frame = currentFrame;
     currentFrame = frame->prev;
-    for (int i = 0; i < frame->variables->len; i++) {
-        framed_variable fvar = frame->variables->stuff[i];
+    for (int i = 0; i < arr_len(frame->variables); i++) {
+        framed_variable fvar = arr_get(frame->variables, i);
         framedvar_free(fvar);
     }
     if (frame->returnValue != NULL)
@@ -67,8 +67,8 @@ void framedvar_free(framed_variable fvar) {
 framed_variable stack_lookup(char* identifier) {
     stack_frame curr = currentFrame;
     while (curr != NULL) {
-        for (int i = 0; i < curr->variables->len; i++) {
-            framed_variable fvar = curr->variables->stuff[i];
+        for (int i = 0; i < arr_len(curr->variables); i++) {
+            framed_variable fvar = arr_get(curr->variables, i);
             if (strcmp(fvar->identifier, identifier) == 0)
                 return fvar;
         }
