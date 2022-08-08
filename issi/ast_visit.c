@@ -130,6 +130,6 @@ static void _visitAst(ast_node n) {
         case AST_FUNCTIONRETURN: _visitFunctionReturn(n); break;
         case AST_DACA: _visitDaca(n); break;
         case AST_CATTIMP: _visitCatTimp(n); break;
-        default: stopHard("AST node type %d not handled", n->type); break;
+        default: runtimeStop("AST node type %d not handled", n->type); break;
     }
 }

@@ -47,7 +47,7 @@ void stack_setReturnValue(value_immediate vimm) {
         curr = curr->prev;
     }
     if (curr == NULL)
-        stopHard("Cannot set return value in a non-function scope");
+        runtimeStop("Cannot set return value in a non-function scope");
     curr->returnValue = vimm_copy(vimm);
 }
 

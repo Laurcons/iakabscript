@@ -1,7 +1,8 @@
 #ifndef UTIL_H_INCLUDED
 #define UTIL_H_INCLUDED
 
-void stopHard(char* format, ...);
+void parsingStop(const char* format, ...);
+void runtimeStop(const char* format, ...);
 void dbgprintf(char* format, ...);
 
 #endif

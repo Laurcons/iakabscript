@@ -9,6 +9,7 @@
 array symtable = NULL;
 
 static void _declareBuiltin(char* identifier) {
+    dbgprintf("Registering builtin %s\n", identifier);
     symbol sym = malloc(sizeof(symbol_t));
     sym->identifier = strdup(identifier);
     sym->type = SYM_FUNCTION_BUILTIN;
@@ -31,7 +32,7 @@ void symt_declareVar(char* identifier) {
     for (int i = 0; i < symtable->len; i++) {
         symbol sym = symtable->stuff[i];
         if (strcmp(sym->identifier, identifier) == 0)
-            stopHard("Variable %s already declared", sym->identifier);
+            runtimeStop("Variable %s already declared", sym->identifier);
     }
     // add a new one
     symbol sym = malloc(sizeof(symbol_t));
@@ -59,7 +60,7 @@ symbol symt_getVar(char* identifier) {
         if (sym->type == SYM_VARIABLE && strcmp(sym->identifier, identifier) == 0)
             return sym;
     }
-    stopHard("Variable %s not found when getting", identifier);
+    runtimeStop("Variable %s not found when getting", identifier);
     return NULL; // will not be called
 }
 
@@ -80,6 +81,6 @@ symbol_function symt_getFunction(char* identifier) {
         if (sym->type == SYM_FUNCTION && strcmp(sym->identifier, identifier) == 0)
             return sym->payload;
     }
-    stopHard("Function %s not found", identifier);
+    runtimeStop("Function %s not found", identifier);
     return NULL; // will not be called
 }

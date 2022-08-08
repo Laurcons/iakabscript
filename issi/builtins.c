@@ -65,10 +65,10 @@ static value_immediate _fanumar(array params) {
     }
     value_immediate first = params->stuff[0];
     if (first->type != VAL_STRING)
-        stopHard("Parameter to fanumar was not a string");
+        runtimeStop("Parameter to fanumar was not a string");
     // check that this string does not contains characters that appear in number literals
     if (strpbrk(first->payload, "nbgez") != NULL)
-        stopHard("The current ISSI version's implementation of the 'fanumar' builtin function does not support non-Human formatted numbers");
+        runtimeStop("The current ISSI version's implementation of the 'fanumar' builtin function does not support non-Human formatted numbers");
     double result;
     sscanf((char*)first->payload, "%lf", &result);
     return vimm_createNumber(result);
@@ -87,6 +87,6 @@ value_immediate builtin_invoke(char* identifier, array params) {
     // this error generally shouldn't be reached because before hitting this code,
     //  ISSI will look in the symbol table and will throw an error there (since the
     //  builtin does not appear there)
-    stopHard("Unknown builtin function %s. How did you even get this error?\n", identifier);
+    runtimeStop("Unknown builtin function %s. How did you even get this error?\n", identifier);
     return NULL;
 }

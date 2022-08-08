@@ -32,7 +32,7 @@ value_immediate vimm_copy(value_immediate other) {
         case VAL_NUMBER: return vimm_createNumber(*((double*)other->payload));
         case VAL_STRING: return vimm_createString(strdup((char*)other->payload));
     }
-    stopHard("Unknown value_kind_t %d\n", other->type);
+    runtimeStop("Unknown value_kind_t %d\n", other->type);
     return NULL;
 }
 
@@ -55,7 +55,7 @@ int vimm_compare(value_immediate first, value_immediate second) {
             return strcmp(s1, s2);
         };
         default: {
-            stopHard("Unknown value_kind_t %d\n", first->type);
+            runtimeStop("Unknown value_kind_t %d\n", first->type);
             return 0;
         }
     }
@@ -70,7 +70,7 @@ int vimm_isTruthy(value_immediate vimm) {
         };
         case VAL_STRING: return 1;
         default: {
-            stopHard("Unknown value_kind_t %d\n", vimm->type);
+            runtimeStop("Unknown value_kind_t %d\n", vimm->type);
             return 0;
         }
     }
@@ -90,7 +90,7 @@ void vimm_dbgprint(value_immediate vimm) {
             dbgprintf("\"%s\"", (char*)vimm->payload);
             break;
         default: {
-            stopHard("Unknown value_kind_t %d\n", vimm->type);
+            runtimeStop("Unknown value_kind_t %d\n", vimm->type);
         }
     }
 }

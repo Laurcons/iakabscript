@@ -11,7 +11,7 @@
 
 static void _assertImmediateType(value_immediate vimm, enum value_kind_t type) {
     if (vimm->type != type) {
-        stopHard("Type (value_kind_t) of immediate was expected to be %d but is %d\n", type, vimm->type);
+        runtimeStop("Type (value_kind_t) of immediate was expected to be %d but is %d\n", type, vimm->type);
     }
 }
 
@@ -134,7 +134,7 @@ static value_immediate _eval_binaryOp(ast_node n) {
     ) {
         int res = vimm_compare(vimmleft, vimmright);
         if (res == -2)
-            stopHard("Uncomparable operands in expression");
+            runtimeStop("Uncomparable operands in expression");
         switch (bop->operator) {
             case OP_EGAL: res = res == 0; break;
             case OP_NUEGAL: res = res != 0; break;
@@ -157,7 +157,7 @@ static value_immediate _eval_binaryOp(ast_node n) {
         vimm = vimm_createNumber(res);
         dbgprintf("expression AST_BINARYOP (logical: %d) is %d\n", bop->operator, res);
     } else {
-        stopHard("Unknown operator_kind_t %d at evalExpr\n", bop->operator);
+        runtimeStop("Unknown operator_kind_t %d at evalExpr\n", bop->operator);
     }
     vimm_free(vimmleft);
     vimm_free(vimmright);
@@ -193,9 +193,9 @@ value_immediate evalExpr(ast_node n) {
         case AST_FUNCTIONCALL: vimm = _eval_functionCall(n); break;
         case AST_BINARYOP: vimm = _eval_binaryOp(n); break;
         case AST_UNARYOP: vimm = _eval_unaryOp(n); break;
-        default: stopHard("Unknown node_kind_t %d at evalExpr\n", n->type);
+        default: runtimeStop("Unknown node_kind_t %d at evalExpr\n", n->type);
     }
     if (vimm == NULL)
-        stopHard("ISSI fault: vimm didn't get assigned when evaluating expression\n");
+        runtimeStop("ISSI fault: vimm didn't get assigned when evaluating expression\n");
     return vimm;
 }

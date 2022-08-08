@@ -77,7 +77,7 @@ eez+ { double x = 1; for (int i = 0; i < strlen(yytext) - 2; i++) x /= 10; yylva
 [a-z]+ {
     yylval.text = strdup(yytext);
     for (int i = 0; i < strlen(yytext); i++)
-        yytext[i] = tolower(yytext[i]);
+        yylval.text[i] = tolower(yytext[i]);
     return IDENTIFIER;
 }
 

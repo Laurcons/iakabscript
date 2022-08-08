@@ -100,7 +100,7 @@ functionCall:
   | HOHO IDENTIFIER actualParamList HOH
     { $$ = ast_createFunctionCall($2, $3); }
   | HOHO IDENTIFIER HOH
-    { stopHard("hoho..hoh syntax is not allowed when function takes no parameters"); }
+    { parsingStop("hoho..hoh syntax is not allowed when function takes no parameters"); }
     ;
 
 functionDef:

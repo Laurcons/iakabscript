@@ -4,16 +4,26 @@
 #include <string.h>
 #include <stdio.h>
 
-void stopHard(char* format, ...) {
-    va_list args;
-    va_start(args, format);
+static void _stop(const char* prefix, const char* format, va_list args) {
     char* newFormat = (char*)malloc(sizeof(char) * (strlen(format) + 17));
-    strcpy(newFormat, "runtime error: ");
+    strcpy(newFormat, prefix);
     strcat(newFormat, format);
     strcat(newFormat, "\n");
     vfprintf(stderr, newFormat, args);
     free(newFormat);
     exit(0);
+}
+
+void runtimeStop(const char* format, ...) {
+    va_list args;
+    va_start(args, format);
+    _stop("runtime error: ", format, args);
+}
+
+void parsingStop(const char* format, ...) {
+    va_list args;
+    va_start(args, format);
+    _stop("parsing error: ", format, args);
 }
 
 void dbgprintf(char* format, ...) {

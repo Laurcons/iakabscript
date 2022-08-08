@@ -8,7 +8,7 @@ int main(int argc, char** argv) {
     symt_init();
 
     if (argc < 2)
-        stopHard("Required file to run: issi [filename]\n");
+        runtimeStop("Required file to run: issi [filename]\n");
     
     yyin = fopen(argv[1], "r");
 
