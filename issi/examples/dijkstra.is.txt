@@ -1,0 +1,34 @@
+<3 hoho plm avem iakabscript
+<3 DIJKSTRA IN IAKABSCRIPT (translated from wikipedia pseudocode)
+<3 by @saltylex
+
+<3 possibly a bit outdated, because of some lang modifications for arrays, but still pretty self explanatory
+
+nu hoho deci iakabdijkstra ia grafulpula si sursapizdii si face
+	nu deci lungimeapulii ii hoho lungimea lui grafulpula cu nimic. nu deci muia ii ez minus gggggggggg
+	nu deci coadapestelui ii fix goala
+	cat timp muia maimic cu lungimeapulii fa <3 trecem prin aceste mui de muchii
+		nu deci muchia ii grafulpula de muia
+		nu deci distanta de muchia ii fanumar "ezzzzzzzz" doariakab <3 infinit
+		nu deci ultimul de muchia ii nui <3 undefined
+		bagan coadapestelui pe muchia
+	gata
+	
+	cat timp coadapestelui ii fix goala invers fa
+		nu deci oricare ii hoho cautamuchiaminimadistanta cu grafulpula
+		scoate din coadapestelui pe oricare
+		
+		nu deci veciniipulii ii hoho daveciniiincoa cu oricare
+		nu deci i ii b si lungimeavecinilor ii lungimea lui veciniipulii
+		
+		cat timp i maimic cu lungimeavecinilor fa
+			nu deci alt ii distanta de oricare plus hoho muchia lui grafulpula cu oricare si lungimeavecinilor de i
+			daca alt maimic cu distanta de lungimeavecinilor de i si distanta de oricare ii ezzzzzzzz invers atunci
+				nu deci distanta de lungimeavecinilor de i ii alt
+				nu deci ultimul de lungimeavecinilor de i ii oricare
+			gata
+			nu deci i ii i plus g
+		gata
+	gata
+	
+iesi distanta si ultimul <3 gata doamne ajuta futu-i mama lui		
