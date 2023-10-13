@@ -18,11 +18,11 @@ value_immediate std_fanumar(array params) {
 	}
 	value_immediate first = params->stuff[0];
 	if (first->type != VAL_STRING)
-		stopHard("Parameter to fanumar was not a string");
+		runtimeStop("Parameter to fanumar was not a string");
 	// check that this string does not contains characters that appear in number
 	// literals
 	if (strpbrk(first->payload, "nbgez") != NULL)
-		stopHard(
+		runtimeStop(
 		    "The current ISSI version's implementation of the 'fanumar' "
 		    "builtin function does not support non-Human formatted numbers");
 	double result;

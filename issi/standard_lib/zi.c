@@ -1,4 +1,6 @@
 #include "standard_lib/standard_lib.h"
+#include "util.h"
+#include <stdio.h>
 
 value_immediate std_zi(array params) {
 	dbgprintf("ZI CALL:\n");

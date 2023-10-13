@@ -1,5 +1,6 @@
 #include "standard_lib/standard_lib.h"
 #include "util.h"
+#include <math.h>
 #include <stdio.h>
 
 value_immediate std_zic(array params) {

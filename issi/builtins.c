@@ -1,13 +1,13 @@
 #include "builtins.h"
+#include "standard_lib/standard_lib.h"
+#include "util.h"
 #include <stdlib.h>
+#include <string.h>
 
-static value_immediate _zic(array);
-static value_immediate _zi(array);
-static value_immediate _fanumar(array);
 identifier_handler_pair_t builtinList[] = {
-    {"zic", _zic},
-    {"zi", _zi},
-    {"fanumar", _fanumar},
+    {"zic", std_zic},
+    {"zi", std_zi},
+    {"fanumar", std_fanumar},
     {"0", NULL},
 };
 
