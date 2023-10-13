@@ -18,6 +18,6 @@ gata
 hoho zic "This program calculates the n'th fibbonacci number." hoh
 hoho zic "Enter n:" hoh
 nu deci m ii hohoh zi
-m ii hoho fanumar m hoh
+m ii hoho fanumar m si "doariakab" hoh
 nu deci rez ii hoho fib m hoh
 hoho zic "Result:" si rez hoh
