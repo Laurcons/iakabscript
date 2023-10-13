@@ -1,4 +1,23 @@
+<3 this function calculates the m'th fibonacci number.
+nu hoho deci fib ia m si fa
 
-NU HOHO DECI iakib ia nimic si fa. iesi nb. gata
+    daca m egal g atunci fa
+        iesi g
+    gata
 
-hoho zic "rezultatu ii" si hohoh iakib hoh
+    daca m egal gg atunci fa
+        iesi g
+    gata
+
+    nu deci prim ii hoho fib m minus g hoh
+    nu deci doi ii hoho fib m minus gg hoh
+    iesi prim plus doi
+
+gata
+
+hoho zic "This program calculates the n'th fibbonacci number." hoh
+hoho zic "Enter n:" hoh
+nu deci m ii hohoh zi
+m ii hoho fanumar m hoh
+nu deci rez ii hoho fib m hoh
+hoho zic "Result:" si rez hoh

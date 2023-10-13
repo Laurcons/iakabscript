@@ -1,0 +1,9 @@
+---
+BasedOnStyle: LLVM
+AlignAfterOpenBracket: AlwaysBreak
+AlignConsecutiveMacros: 'true'
+BreakBeforeBraces: Attach
+IndentWidth: '4'
+TabWidth: '4'
+UseTab: ForIndentation
+---
