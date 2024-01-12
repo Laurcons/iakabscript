@@ -2,6 +2,7 @@
 #include "iakab.tab.h"
 #include "tokens.tab.h"
 extern FILE* yyin;
+extern int yylex_destroy();
 
 int main(int argc, char** argv) {
     astInit();
@@ -26,4 +27,6 @@ int main(int argc, char** argv) {
     initialVisitAst();
     dbgprintf("-- Executing code\n");
     visitAst(rootNode);
+
+    yylex_destroy();
 }

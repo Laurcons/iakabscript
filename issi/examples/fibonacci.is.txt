@@ -20,4 +20,5 @@ hoho zic "Enter n:" hoh
 nu deci m ii hohoh zi
 m ii hoho fanumar m hoh
 nu deci rez ii hoho fib m hoh
-hoho zic "Result:" rez hoh
+hoho zic "Result:" hoh
+hoho zic rez hoh
